@@ -8,10 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-interface AppDao {
+interface AppDao : BaseDao<AdsEntity> {
     @Query("SELECT * FROM ads_table")
     fun getAllAds(): Flow<List<AdsEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAds(ads: List<AdsEntity>)
+
 }

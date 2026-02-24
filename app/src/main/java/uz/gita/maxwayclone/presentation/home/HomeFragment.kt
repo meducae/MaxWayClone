@@ -1,95 +1,101 @@
 package uz.gita.maxwayclone.presentation.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.FragmentHomeBinding
 import uz.gita.maxwayclone.presentation.adapter.AdsAdapter
-import kotlin.getValue
 
-class HomeFragment: Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
-    private lateinit var adapter: AdsAdapter
+    private  var _adapter: AdsAdapter ?=null
+    private val adapter get() = _adapter
 
-    private val handler = Handler(Looper.getMainLooper())
 
-    private val autoScrollRunnable = object : Runnable {
-        override fun run() {
-            val viewPager = _binding?.viewPagerCarousel ?: return
-            if (adapter.itemCount == 0) return
-
-            val nextItem = viewPager.currentItem + 1
-            viewPager.setCurrentItem(nextItem, true)
-
-            handler.removeCallbacks(this)
-            handler.postDelayed(this, 4000)
-        }
-    }
+    private var autoScrollJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
         setupAdapter()
         observeViewModel()
-
         viewModel.fetchAds()
-
-
     }
+
     private fun setupAdapter() {
-        adapter = AdsAdapter()
+        _adapter = AdsAdapter()
         binding.viewPagerCarousel.adapter = adapter
 
         binding.viewPagerCarousel.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
+
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    handler.removeCallbacks(autoScrollRunnable)
-                }
-                else if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    resetAutoScroll()
+                    stopAutoScroll()
+                } else if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    startAutoScroll()
                 }
             }
         })
     }
+
     private fun observeViewModel() {
         viewModel.adsLiveData.observe(viewLifecycleOwner) { list ->
             if (list.isNullOrEmpty()) return@observe
 
-            adapter.submitList(list) {
+            adapter!!.submitList(list) {
                 val middle = 10000 / 2
                 val startPosition = middle - (middle % list.size)
 
-                binding.viewPagerCarousel.setCurrentItem(startPosition, false)
-
-                resetAutoScroll()
+                if (binding.viewPagerCarousel.currentItem == 0) {
+                    binding.viewPagerCarousel.setCurrentItem(startPosition, false)
+                }
+                startAutoScroll()
             }
         }
     }
-    private fun resetAutoScroll() {
-        handler.removeCallbacks(autoScrollRunnable)
-        handler.postDelayed(autoScrollRunnable, 4000)
+
+    private fun startAutoScroll() {
+        stopAutoScroll()
+
+
+        autoScrollJob = viewLifecycleOwner.lifecycleScope.launch {
+            while (true) {
+                delay(4000) // Handler.postDelayed o'rniga
+                val nextItem = binding.viewPagerCarousel.currentItem + 1
+                binding.viewPagerCarousel.setCurrentItem(nextItem, true)
+            }
+        }
     }
-    override fun onPause() {
-        handler.removeCallbacks(autoScrollRunnable)
-        super.onPause()
+
+    private fun stopAutoScroll() {
+        autoScrollJob?.cancel()
     }
 
     override fun onResume() {
         super.onResume()
-        resetAutoScroll()
+
+        if (adapter!!.itemCount > 0) startAutoScroll()
+    }
+
+    override fun onPause() {
+        stopAutoScroll()
+        super.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(autoScrollRunnable)
         _binding = null
+        _adapter=null
     }
 }

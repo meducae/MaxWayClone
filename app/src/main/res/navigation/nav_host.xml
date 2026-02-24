@@ -24,8 +24,57 @@
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="uz.gita.maxwayclone.presentation.profile.ProfileFragment"
+        android:name="uz.gita.maxwayclone.presentation.profile.ui.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_nav_profile_to_fragmentName"
+            app:destination="@id/fragmentName" />
+        <action
+            android:id="@+id/action_nav_profile_to_fragmentNoInternet2"
+            app:destination="@id/fragmentNoInternet" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentPhone"
+        tools:layout="@layout/fragment_register_phone"
+        android:name="uz.gita.maxwayclone.presentation.profile.register_phone.FragmentPhone"
+        android:label="FragmentPhone" >
+        <action
+            android:id="@+id/action_fragmentPhone_to_fragmentCode"
+            app:destination="@id/fragmentCode" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentName"
+        tools:layout="@layout/fragment_register_name"
+        android:name="uz.gita.maxwayclone.presentation.profile.register_name.FragmentName"
+        android:label="FragmentName" >
+        <action
+            android:id="@+id/action_fragmentName_to_fragmentPhone"
+            app:destination="@id/fragmentPhone" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCode"
+        tools:layout="@layout/fragment_register_code"
+        android:name="uz.gita.maxwayclone.presentation.profile.register_code.FragmentCode"
+        android:label="FragmentCode" >
+        <action
+            android:id="@+id/action_fragmentCode_to_nav_profile2"
+            app:destination="@id/nav_profile" />
+    </fragment>
+    <dialog
+        android:id="@+id/editProfileBottomSheetDialog"
+        tools:layout="@layout/bottom_sheet_dialog"
+        android:name="uz.gita.maxwayclone.presentation.dialogs.EditProfileBottomSheetDialog"
+        android:label="EditProfileBottomSheetDialog" >
+        <action
+            android:id="@+id/action_editProfileBottomSheetDialog_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </dialog>
+    <fragment
+        android:id="@+id/fragmentNoInternet"
+        tools:layout="@layout/fragment_no_connection"
+        android:name="uz.gita.maxwayclone.presentation.no_internet.FragmentNoInternet"
+        android:label="FragmentNoInternet" />
 
 </navigation>

@@ -69,4 +69,5 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
+    implementation("com.google.android.material:material:1.11.0")
 }

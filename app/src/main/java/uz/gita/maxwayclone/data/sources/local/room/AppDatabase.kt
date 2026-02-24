@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import uz.gita.maxwayclone.app.App
 
-@Database([] , version = 1 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AppDao
     companion object{

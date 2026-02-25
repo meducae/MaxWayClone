@@ -21,6 +21,13 @@ class HomeViewModelImpl(private val adsUseCase: AdsUseCase , private val stories
     override val storiesFlowData = MutableStateFlow<List<StoriesModel>>(emptyList())
     override val errorLiveData = MutableLiveData<String>()
 
+    init {
+        fetchAds()
+        viewModelScope.launch {
+            adsUseCase.fetchAndSaveAds()
+        }
+    }
+
     override fun fetchAds() {
         adsUseCase()
             .onEach { state ->

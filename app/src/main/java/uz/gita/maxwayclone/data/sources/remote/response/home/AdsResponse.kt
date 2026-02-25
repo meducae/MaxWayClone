@@ -1,22 +1,11 @@
 package uz.gita.maxwayclone.data.sources.remote.response.home
 
 data class AdsResponse(
-    val message: String,
-    val data: List<AdItemResponse>
+    val message: String ?=null,
+    val data: List<AdItemResponse>?=null
 )
 
 data class AdItemResponse(
-    val id: Int,
-    val bannerUrl: String
-)
-
-data class AdStoriesResponse(
-    val message : String,
-    val data : List<AdStoriesResponseData>
-)
-
-data class AdStoriesResponseData(
-    val id : Int,
-    val name: String,
-    val url : String
+    val id: Int?=null,
+    val bannerUrl: String?=null
 )

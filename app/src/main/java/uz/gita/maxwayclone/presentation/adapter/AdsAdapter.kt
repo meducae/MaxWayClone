@@ -23,8 +23,8 @@ class AdsAdapter : ListAdapter<AdsModel, AdsAdapter.VH>(DiffCallBack) {
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         if (currentList.isNotEmpty()){
-            holder.bind(getItem(position % currentList.size))
-        }
+            val item = currentList[position % currentList.size]
+            holder.bind(item)        }
     }
 
     inner class VH(val binding: ItomAdsBinding) : RecyclerView.ViewHolder(binding.root) {

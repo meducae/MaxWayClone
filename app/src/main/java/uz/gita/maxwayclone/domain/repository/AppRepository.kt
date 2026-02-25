@@ -1,10 +1,10 @@
-package uz.gita.maxwayclone.domain.usecase
+package uz.gita.maxwayclone.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 
-interface AdsUseCase {
-    operator fun invoke(): Flow<UiState<List<AdsModel>>>
+interface AppRepository {
+   public fun getAds(): Flow<UiState<List<AdsModel>>>
     suspend fun fetchAndSaveAds()
 }

@@ -9,7 +9,7 @@ import uz.gita.maxwayclone.domain.usecase.AdsUseCase
 class AdsUseCaseImpl  (
     private val repository: AppRepository
 ) : AdsUseCase {
-    override fun invoke(): Flow<UiState<List<AdsModel>>> {
+    override  fun invoke(): Flow<UiState<List<AdsModel>>> {
         return repository.getAds()
     }
 }

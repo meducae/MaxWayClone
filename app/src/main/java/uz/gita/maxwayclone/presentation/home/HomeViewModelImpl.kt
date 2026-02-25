@@ -14,6 +14,10 @@ class HomeViewModelImpl(private val adsUseCase: AdsUseCase) : ViewModel(), HomeV
     override val adsLiveData = MutableLiveData<List<AdsModel>>()
     override val errorLiveData = MutableLiveData<String>()
 
+    init {
+        fetchAds()
+    }
+
     override fun fetchAds() {
         adsUseCase()
             .onEach { state ->

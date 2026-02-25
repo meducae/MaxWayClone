@@ -17,7 +17,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory()
+    }
     private  var _adapter: AdsAdapter ?=null
     private val adapter get() = _adapter
 

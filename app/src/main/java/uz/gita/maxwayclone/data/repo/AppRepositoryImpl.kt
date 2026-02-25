@@ -60,7 +60,6 @@ class AppRepositoryImpl private constructor(
             dao.insert(entities)
         } catch (e: Exception) {
 
-            Log.e("AdsRepository", "Ads fetch failed: ${e.message}")
         }
     }
 }

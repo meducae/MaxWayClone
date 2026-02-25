@@ -23,8 +23,10 @@ class HomeViewModelImpl(private val adsUseCase: AdsUseCase , private val stories
 
     init {
         fetchAds()
+        loadStories()
         viewModelScope.launch {
             adsUseCase.fetchAndSaveAds()
+            storiesUseCase.fetchAndSaveStories()
         }
     }
 

@@ -5,11 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
 
 @Database([AdsEntity::class , StoriesEntity::class] , version = 2 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AdsDao
+    abstract fun getStoriesDao() : StoriesAdsDao
     companion object{
         @Volatile
         private var instance: AppDatabase? = null

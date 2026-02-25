@@ -16,7 +16,7 @@ object ApiClient {
 
     private val retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl("https://newsworthy-cosmological-song.ngrok-free.dev/")
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

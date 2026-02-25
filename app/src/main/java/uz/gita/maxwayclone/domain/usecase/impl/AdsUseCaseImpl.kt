@@ -15,7 +15,6 @@ class AdsUseCaseImpl  (
 
     override suspend fun fetchAndSaveAds() {
         repository.fetchAndSaveAds()
-
     }
 
 }

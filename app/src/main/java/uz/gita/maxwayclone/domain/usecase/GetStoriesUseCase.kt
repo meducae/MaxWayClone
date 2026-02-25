@@ -6,4 +6,5 @@ import uz.gita.maxwayclone.domain.model.home.StoriesModel
 
 interface GetStoriesUseCase {
     operator fun invoke() : Flow<UiState<List<StoriesModel>>>
+    suspend fun fetchAndSaveStories()
 }

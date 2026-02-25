@@ -1,5 +1,6 @@
 package uz.gita.maxwayclone.presentation.home.stories
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
@@ -39,6 +40,7 @@ class StoriesFragment : Fragment(R.layout.main_stories) {
     private val binding by viewBinding(MainStoriesBinding::bind)
 
 
+    @SuppressLint("SuspiciousIndentation", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = StoriesShowAdapter(childFragmentManager, lifecycle)

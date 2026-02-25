@@ -92,8 +92,15 @@ class EditProfileBottomSheetDialog(
                             alreadyFilled = true
 
                             val info = event.data
-                            binding.userName.setText(info.data.name)
-                            binding.birthday.setText(info.data.birthDate)
+                            val name = info.data.name ?: ""
+                            if (name.isBlank()){
+                                binding.birthday.setText(tokenManager.getBirthday())
+                                binding.userName.setText(tokenManager.getName())
+                            }else{
+                                binding.userName.setText(info.data.name)
+                                binding.birthday.setText(info.data.birthDate)
+                            }
+
                         }
 
                         is EditProfileViewModel.Event.UpdateSuccess -> {

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.usecase.AdsUseCase
@@ -16,6 +17,9 @@ class HomeViewModelImpl(private val adsUseCase: AdsUseCase) : ViewModel(), HomeV
 
     init {
         fetchAds()
+        viewModelScope.launch {
+            adsUseCase.fetchAndSaveAds()
+        }
     }
 
     override fun fetchAds() {

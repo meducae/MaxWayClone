@@ -1,18 +1,16 @@
 package uz.gita.maxwayclone.data.repo
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.app.App
 import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
-import uz.gita.maxwayclone.data.sources.local.room.AppDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.domain.model.home.AdsModel
@@ -20,7 +18,7 @@ import uz.gita.maxwayclone.domain.repository.AppRepository
 
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
-    private val dao: AppDao
+    private val dao: AdsDao
 ): AppRepository {
 
 
@@ -48,16 +46,16 @@ class AppRepositoryImpl private constructor(
                 } else {
                     UiState.Success(entities.map { it.toDomain() })
                 }
-            }.flowOn(Dispatchers.IO)
+            }
 
 
-    override suspend fun fetchAndSaveAds() {
+    override suspend fun fetchAndSaveAds() = withContext(Dispatchers.IO) {
         try {
             val response = productApi.getAds()
             val entities = response.data!!.map { it.toEntity() }
 
 
-            dao.insert(entities)
+            dao.updateAllAds(entities)
         } catch (e: Exception) {
 
         }

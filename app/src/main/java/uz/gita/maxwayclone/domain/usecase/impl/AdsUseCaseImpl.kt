@@ -12,4 +12,10 @@ class AdsUseCaseImpl  (
     override  fun invoke(): Flow<UiState<List<AdsModel>>> {
         return repository.getAds()
     }
+
+    override suspend fun fetchAndSaveAds() {
+        repository.fetchAndSaveAds()
+
+    }
+
 }

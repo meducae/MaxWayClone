@@ -5,6 +5,6 @@ import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 
 interface AppRepository {
-    fun getAds(): Flow<UiState<List<AdsModel>>>
+   public fun getAds(): Flow<UiState<List<AdsModel>>>
     suspend fun fetchAndSaveAds()
 }

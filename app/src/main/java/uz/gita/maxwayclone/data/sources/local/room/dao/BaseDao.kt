@@ -1,4 +1,4 @@
-package uz.gita.maxwayclone.data.sources.local.room
+package uz.gita.maxwayclone.data.sources.local.room.dao
 
 import androidx.room.Delete
 import androidx.room.Insert
@@ -7,10 +7,10 @@ import androidx.room.Update
 
 interface BaseDao<T> {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(data: T)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(data: List<T>)
 
     @Update

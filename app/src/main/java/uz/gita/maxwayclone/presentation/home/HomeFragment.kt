@@ -20,8 +20,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory()
     }
-    private  var _adapter: AdsAdapter ?=null
-    private val adapter get() = _adapter
+    private  val adapter: AdsAdapter  by lazy { AdsAdapter() }
 
 
     private var autoScrollJob: Job? = null
@@ -32,11 +31,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         setupAdapter()
         observeViewModel()
-        viewModel.fetchAds()
     }
 
     private fun setupAdapter() {
-        _adapter = AdsAdapter()
         binding.viewPagerCarousel.adapter = adapter
 
         binding.viewPagerCarousel.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -60,7 +57,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 val startPosition = middle - (middle % list.size)
 
                 if (binding.viewPagerCarousel.currentItem == 0) {
-                    binding.viewPagerCarousel.setCurrentItem(startPosition, false)
+                    binding.viewPagerCarousel.setCurrentItem(startPosition, true)
                 }
                 startAutoScroll()
             }
@@ -87,7 +84,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onResume() {
         super.onResume()
 
-        if (adapter!!.itemCount > 0) startAutoScroll()
+        if (adapter.itemCount > 0) startAutoScroll()
     }
 
     override fun onPause() {
@@ -97,7 +94,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.viewPagerCarousel.adapter = null
         _binding = null
-        _adapter=null
     }
 }

@@ -5,25 +5,19 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
 
 @Dao
-interface AdsDao : BaseDao<AdsEntity> {
+interface StoriesAdsDao : BaseDao<StoriesEntity> {
+    @Query("SELECT * FROM stories_table")
+    fun getAllAds(): Flow<List<StoriesEntity>>
 
-    @Query("SELECT * FROM ads_table")
-    fun getAllAds(): Flow<List<AdsEntity>>
-
-    @Query("DELETE FROM ads_table")
+    @Query("DELETE FROM stories_table")
     suspend fun deleteAllAds()
 
     @Transaction
-    suspend fun updateAllAds(entities: List<AdsEntity>) {
+    suspend fun updateAllAds(entities: List<StoriesEntity>) {
         deleteAllAds()
         insert(entities)
     }
-
-
-
-
-
-
 }

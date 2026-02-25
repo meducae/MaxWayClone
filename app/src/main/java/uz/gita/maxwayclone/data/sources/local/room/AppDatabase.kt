@@ -4,11 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import uz.gita.maxwayclone.app.App
+import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
+import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
 
-@Database([] , version = 1 )
+@Database([AdsEntity::class] , version = 1 )
 abstract class AppDatabase : RoomDatabase(){
-    abstract fun getDao(): AppDao
+    abstract fun getDao(): AdsDao
     companion object{
         @Volatile
         private var instance: AppDatabase? = null

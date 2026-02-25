@@ -36,6 +36,13 @@ android {
     buildFeatures{
         viewBinding = true
     }
+    buildFeatures{
+        buildConfig = true
+    }
+    defaultConfig{
+        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
+    }
+
 }
 
 dependencies {
@@ -69,4 +76,5 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

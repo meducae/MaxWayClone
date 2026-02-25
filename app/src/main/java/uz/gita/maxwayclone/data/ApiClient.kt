@@ -11,14 +11,14 @@ import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 object ApiClient {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor (ChuckerInterceptor.Builder(instance).build())
+
         .build()
 
     private val retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(BASE_URL)
+        .baseUrl("https://newsworthy-cosmological-song.ngrok-free.dev/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     fun getProductApi(): ProductApi = retrofit.create(ProductApi::class.java)
-
 }

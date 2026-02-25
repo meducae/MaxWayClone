@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -16,7 +17,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,7 +40,7 @@ android {
         buildConfig = true
     }
     defaultConfig{
-        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
+        buildConfigField("String" , "BASE_URL" , "\"https://newsworthy-cosmological-song.ngrok-free.dev/\"")
     }
 
 }

@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import uz.gita.maxwayclone.app.App
 
-@Database([AdsEntity::class] , version = 1 )
+@Database([AdsEntity::class , StoriesEntity::class] , version = 2 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AppDao
     companion object{
@@ -19,7 +19,6 @@ abstract class AppDatabase : RoomDatabase(){
                     AppDatabase::class.java,
                     "AppDatabase"
                 )
-
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }

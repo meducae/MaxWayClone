@@ -1,0 +1,59 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/imgProduct"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lavash klassik"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sf_pro_display_regular"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvProductDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Klassik lavash, go'shtli"
+                android:textColor="@color/black"
+                android:fontFamily="@font/sf_pro_display_regular"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvProductPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25 000 сум"
+            android:textColor="@color/btn_primary"
+            android:textStyle="bold" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -11,7 +11,6 @@ interface AppRepository {
     suspend fun fetchAndSaveAds()
 
     fun searchProduct(query: String): Flow<UiState<List<SearchModel>>>
-
     suspend fun searchFetchAndSave()
 
 }

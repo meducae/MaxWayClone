@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -29,6 +30,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
+        binding.homeSearch.setOnClickListener {
+            R.id.action_nav_home_to_searchFragment
+
+        }
+
         setupAdapter()
         observeViewModel()
     }
@@ -52,7 +58,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.adsLiveData.observe(viewLifecycleOwner) { list ->
             if (list.isNullOrEmpty()) return@observe
 
-            adapter!!.submitList(list) {
+            adapter.submitList(list) {
                 val middle = 10000 / 2
                 val startPosition = middle - (middle % list.size)
 
@@ -70,7 +76,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         autoScrollJob = viewLifecycleOwner.lifecycleScope.launch {
             while (true) {
-                delay(4000) // Handler.postDelayed o'rniga
+                delay(4000)
                 val nextItem = binding.viewPagerCarousel.currentItem + 1
                 binding.viewPagerCarousel.setCurrentItem(nextItem, true)
             }

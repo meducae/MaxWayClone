@@ -9,7 +9,7 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
 
-@Database([AdsEntity::class, SearchEntity::class] , version = 2 )
+@Database([AdsEntity::class, SearchEntity::class] , version = 3 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AdsDao
     abstract fun searchDao(): SearchDao

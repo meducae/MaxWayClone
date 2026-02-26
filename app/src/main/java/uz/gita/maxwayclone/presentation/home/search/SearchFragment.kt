@@ -32,7 +32,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun setupUI() {
         binding.rvSearch.adapter = adapter
 
-        // Qidiruv maydoniga matn yozilganda
         binding.etSearch.addTextChangedListener { text ->
             val query = text.toString().trim()
             if (query.isNotEmpty()) {
@@ -43,10 +42,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
         }
 
-        // Mahsulot bosilganda Details sahifasiga o'tish
         adapter.setOnItemClickListener { product ->
-            // Navigation orqali o'tish (SafeArgs bilan product jo'natish mumkin)
-            // findNavController().navigate(SearchFragmentDirections.actionToDetails(product))
+            val bundle = Bundle().apply {
+                putSerializable("product", product)
+            }
+            findNavController().navigate(
+                R.id.action_searchFragment_to_productDetailsFragment,
+                bundle
+            )
         }
 
         binding.tvCancel.setOnClickListener {
@@ -58,7 +61,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         viewModel.searchResultLiveData.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
 
-            // Natija yo'qligini tekshirish
             if (list.isNullOrEmpty() && binding.etSearch.text.isNotEmpty()) {
                 binding.layoutEmptyState.visibility = View.VISIBLE
                 binding.rvSearch.visibility = View.GONE
@@ -69,7 +71,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         viewModel.loaderLiveData.observe(viewLifecycleOwner) { isLoading ->
-            // Progress bar ko'rsatish mantiqi
         }
     }
 

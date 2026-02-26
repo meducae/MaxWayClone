@@ -19,11 +19,11 @@ fun SearchItemResponse.toEntity() = SearchEntity(
 )
 
 fun SearchEntity.toDomain() = SearchModel(
-    id = id,
-    categoryId = categoryId,
-    name = name,
-    description = description,
-    image = image,
-    cost = cost
+    id = id ?: 0,
+    categoryId = categoryId ?: 0,
+    name = name ?: "",
+    description = description ?: "",
+    image = image ?: "",
+    cost = cost ?: 0
 )
 

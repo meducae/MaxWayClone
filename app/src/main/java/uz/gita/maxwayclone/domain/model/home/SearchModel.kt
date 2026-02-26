@@ -1,5 +1,7 @@
 package uz.gita.maxwayclone.domain.model.home
 
+import java.io.Serializable
+
 data class SearchModel(
     val id: Int,
 
@@ -12,4 +14,4 @@ data class SearchModel(
     val image: String,
 
     val cost: Int
-)
+): Serializable

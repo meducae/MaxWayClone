@@ -34,6 +34,18 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="uz.gita.maxwayclone.presentation.home.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="uz.gita.maxwayclone.presentation.home.search.ProductDetailsFragment"
+        android:label="ProductDetailsFragment" >
+        <argument
+            android:name="product"
+            app:argType="uz.gita.maxwayclone.domain.model.home.SearchModel" />
+    </fragment>
 
 </navigation>

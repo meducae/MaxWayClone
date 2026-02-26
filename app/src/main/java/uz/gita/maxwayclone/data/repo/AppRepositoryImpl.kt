@@ -1,7 +1,9 @@
 package uz.gita.maxwayclone.data.repo
 
+import androidx.room.util.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -68,20 +70,28 @@ class AppRepositoryImpl private constructor(
 
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
-            if(entities.isEmpty()){
-                UiState.Success(emptyList())
-            }else{
+            // entities har doim List bo'ladi (Room bo'sh bo'lsa ham bo'sh list qaytaradi)
+            if (entities.isEmpty()) {
+                UiState.Success(emptyList<SearchModel>())
+            } else {
+                // map funksiyasini chaqirishdan oldin toDomain() borligini tekshiring
                 UiState.Success(entities.map { it.toDomain() })
             }
         }
 
-
     override suspend fun searchFetchAndSave() {
         try {
-            val response = productApi.searchProduct("a")
-            val entities = response.data!!.map { it.toEntity() }
-            searchDao.searchUpdateAll(entities)
-        }catch (e: Exception){}
+            val response = productApi.searchProduct("")
+            // Bu yerda response.data null bo'lishi mumkin, shuning uchun ?. ishlating
+            val dataList = response.data
+
+            if (dataList != null) {
+                val entities = dataList.map { it.toEntity() }
+                searchDao.searchUpdateAll(entities)
+            }
+        } catch (e: Exception) {
+            // Xatoni ko'rish uchun: e.printStackTrace()
+        }
     }
 }
 

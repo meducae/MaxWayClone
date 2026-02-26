@@ -31,8 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.bind(view)
 
         binding.homeSearch.setOnClickListener {
-            R.id.action_nav_home_to_searchFragment
-
+            findNavController().navigate(R.id.action_nav_home_to_searchFragment)
         }
 
         setupAdapter()

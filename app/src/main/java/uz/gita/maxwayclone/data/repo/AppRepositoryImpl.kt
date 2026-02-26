@@ -79,7 +79,7 @@ class AppRepositoryImpl private constructor(
     override suspend fun searchFetchAndSave() {
         try {
             val response = productApi.searchProduct("a")
-            val entities = response.data.map { it.toEntity() }
+            val entities = response.data!!.map { it.toEntity() }
             searchDao.searchUpdateAll(entities)
         }catch (e: Exception){}
     }

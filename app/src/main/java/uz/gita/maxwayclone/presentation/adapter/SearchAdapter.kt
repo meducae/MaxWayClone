@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.ItomSearchProductBinding
 import uz.gita.maxwayclone.domain.model.home.SearchModel
 
@@ -16,49 +17,38 @@ class SearchAdapter : ListAdapter<SearchModel, SearchAdapter.VH>(DiffCallBack) {
         onItemClickListener = listener
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): VH {
-        return VH(ItomSearchProductBinding.inflate(LayoutInflater.from(parent.context)))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+
+        return VH(ItomSearchProductBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(
-        holder: VH,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class VH(val binding: ItomSearchProductBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(model :SearchModel){
+    inner class VH(private val binding: ItomSearchProductBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(model: SearchModel) {
             binding.apply {
                 tvProductName.text = model.name
                 tvProductDesc.text = model.description
-                tvProductPrice.text = model.cost.toString()
+
+                tvProductPrice.text = "${model.cost} сум"
+
                 Glide.with(imgProduct.context)
                     .load(model.image)
+                    .centerCrop()
+                    .placeholder(R.drawable.search)
                     .into(imgProduct)
+
                 root.setOnClickListener {
                     onItemClickListener?.invoke(model)
                 }
             }
         }
     }
-    companion object DiffCallBack: DiffUtil.ItemCallback<SearchModel>(){
-        override fun areItemsTheSame(
-            oldItem: SearchModel,
-            newItem: SearchModel
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
 
-        override fun areContentsTheSame(
-            oldItem: SearchModel,
-            newItem: SearchModel
-        ): Boolean {
-            return oldItem == newItem
-        }
-
+    companion object DiffCallBack : DiffUtil.ItemCallback<SearchModel>() {
+        override fun areItemsTheSame(oldItem: SearchModel, newItem: SearchModel) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: SearchModel, newItem: SearchModel) = oldItem == newItem
     }
 }

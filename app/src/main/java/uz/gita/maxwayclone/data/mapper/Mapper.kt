@@ -10,12 +10,12 @@ import uz.gita.maxwayclone.domain.model.home.SearchModel
 fun AdItemResponse.toEntity() = AdsEntity(id = id ?: 0, imageUrl = bannerUrl ?: "")
 fun AdsEntity.toDomain() = AdsModel(id = id, imageUrl = imageUrl)
 fun SearchItemResponse.toEntity() = SearchEntity(
-    id = id,
-    categoryId = categoryId,
-    name = name,
-    description = description,
-    image = image,
-    cost = cost
+    id = id ?: 0,
+    categoryId = categoryId ?: 0,
+    name = name ?: "",
+    description = description ?: "",
+    image = image ?: "",
+    cost = cost ?: 0
 )
 
 fun SearchEntity.toDomain() = SearchModel(

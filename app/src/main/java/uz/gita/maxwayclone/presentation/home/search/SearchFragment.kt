@@ -10,11 +10,11 @@ import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.FragmentSearchBinding
 import uz.gita.maxwayclone.presentation.adapter.SearchAdapter
 
-class SearchFragment : Fragment(R.layout.fragment_search){
+class SearchFragment : Fragment(R.layout.fragment_search) {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SearchViewModel by viewModels{
+    private val viewModel: SearchViewModel by viewModels {
         SearchFactory()
     }
 
@@ -24,9 +24,11 @@ class SearchFragment : Fragment(R.layout.fragment_search){
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
-
+        setupUI()
+        observeViewModel()
 
     }
+
     private fun setupUI() {
         binding.rvSearch.adapter = adapter
 
@@ -51,6 +53,7 @@ class SearchFragment : Fragment(R.layout.fragment_search){
             findNavController().popBackStack()
         }
     }
+
     private fun observeViewModel() {
         viewModel.searchResultLiveData.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
@@ -74,7 +77,6 @@ class SearchFragment : Fragment(R.layout.fragment_search){
         super.onDestroyView()
         _binding = null
     }
-
 
 
 }

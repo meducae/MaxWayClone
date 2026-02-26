@@ -27,5 +27,10 @@
         android:name="uz.gita.maxwayclone.presentation.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/fragmentBranches"
+        tools:layout="@layout/fragment_branches"
+        android:name="uz.gita.maxwayclone.presentation.branch.FragmentBranches"
+        android:label="FragmentBranches" />
 
 </navigation>

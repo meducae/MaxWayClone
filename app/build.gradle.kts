@@ -40,7 +40,7 @@ android {
         buildConfig = true
     }
     defaultConfig{
-        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
+        buildConfigField("String" , "BASE_URL" , "\"https://4aac-94-158-59-159.ngrok-free.app/\"")
     }
 
 }

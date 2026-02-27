@@ -1,7 +1,9 @@
 package uz.gita.maxwayclone.data.repo
 
+import androidx.room.util.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -12,13 +14,17 @@ import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
+import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.domain.model.home.AdsModel
+import uz.gita.maxwayclone.domain.model.home.SearchModel
 import uz.gita.maxwayclone.domain.repository.AppRepository
+import kotlin.collections.emptyList
 
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
-    private val dao: AdsDao
+    private val dao: AdsDao,
+    private val searchDao: SearchDao
 ): AppRepository {
 
 
@@ -31,8 +37,9 @@ class AppRepositoryImpl private constructor(
 
                 val api = ApiClient.getProductApi()
                 val db = AppDatabase.getDatabase(App.instance).getDao()
+                val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
 
-                instance = AppRepositoryImpl(api, db)
+                instance = AppRepositoryImpl(api, db,searchDb)
             }
             return instance!!
         }
@@ -58,6 +65,29 @@ class AppRepositoryImpl private constructor(
             dao.updateAllAds(entities)
         } catch (e: Exception) {
 
+        }
+    }
+
+    override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
+        searchDao.searchProduct(query).map { entities ->
+          if (entities.isEmpty()) {
+                UiState.Success(emptyList<SearchModel>())
+            } else {
+                UiState.Success(entities.map { it.toDomain() })
+            }
+        }
+
+    override suspend fun searchFetchAndSave() {
+        try {
+            val response = productApi.searchProduct("")
+
+            val dataList = response.data
+
+            if (dataList != null) {
+                val entities = dataList.map { it.toEntity() }
+                searchDao.searchUpdateAll(entities)
+            }
+        } catch (e: Exception) {
         }
     }
 }

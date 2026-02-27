@@ -45,6 +45,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
         }
 
         viewModel.loadingLiveData.observe(viewLifecycleOwner) { isLoading ->
+            binding.itemProgress.visibility = if (isLoading) View.VISIBLE else View.GONE
 
         }
 

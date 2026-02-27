@@ -2,7 +2,6 @@ package uz.gita.maxwayclone.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import uz.gita.maxwayclone.UiState
@@ -12,13 +11,17 @@ import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
+import uz.gita.maxwayclone.data.sources.local.room.dao.NotificationDao
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.domain.model.home.AdsModel
+import uz.gita.maxwayclone.domain.model.home.NotificationModel
 import uz.gita.maxwayclone.domain.repository.AppRepository
+import kotlin.collections.emptyList
 
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
-    private val dao: AdsDao
+    private val adsDao: AdsDao,
+    private val notificationDao: NotificationDao
 ): AppRepository {
 
 
@@ -31,15 +34,16 @@ class AppRepositoryImpl private constructor(
 
                 val api = ApiClient.getProductApi()
                 val db = AppDatabase.getDatabase(App.instance).getDao()
+                val notificationDao = AppDatabase.getDatabase(App.instance).getNotificationDao()
 
-                instance = AppRepositoryImpl(api, db)
+                instance = AppRepositoryImpl(api, db, notificationDao)
             }
             return instance!!
         }
     }
 
     override fun getAds(): Flow<UiState<List<AdsModel>>> =
-        dao.getAllAds()
+        adsDao.getAllAds()
             .map { entities ->
                 if (entities.isEmpty()) {
                     UiState.Success(emptyList())
@@ -55,7 +59,32 @@ class AppRepositoryImpl private constructor(
             val entities = response.data!!.map { it.toEntity() }
 
 
-            dao.updateAllAds(entities)
+            adsDao.updateAllAds(entities)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    override fun getNotification(): Flow<UiState<List<NotificationModel>>> =
+        notificationDao.getAllNotifications()
+            .map { entities ->
+                if (entities.isEmpty()) {
+                    UiState.Success(emptyList())
+                } else {
+                    UiState.Success(entities.map { it.toDomain() })
+                }
+            }
+
+
+    override suspend fun fetchAndSaveNotification() = withContext(Dispatchers.IO) {
+        try {
+            val response = productApi.getNotifications()
+            if (response.isSuccessful && response.body() != null) {
+                val data = response.body()!!.data
+                val entities = data.map { it.toEntity() }
+
+                notificationDao.updateAllNotifications(entities)
+            }
         } catch (e: Exception) {
 
         }

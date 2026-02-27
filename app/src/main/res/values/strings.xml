@@ -37,4 +37,5 @@
     <string name="phone">Номер телефона</string>
     <string name="birth_date">Дата рождения</string>
     <string name="confirm">Подтвердить</string>
+    <string name="notification">Уведомление</string>
 </resources>

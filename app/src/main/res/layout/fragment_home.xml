@@ -13,16 +13,17 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/home_search"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/search"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:id="@+id/notificationHome"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 app:tint="@color/dark_grey"
                 android:src="@drawable/notification"
                 app:layout_constraintTop_toTopOf="parent"

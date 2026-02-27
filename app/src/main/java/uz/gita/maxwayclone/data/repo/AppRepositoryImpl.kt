@@ -70,11 +70,9 @@ class AppRepositoryImpl private constructor(
 
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
-            // entities har doim List bo'ladi (Room bo'sh bo'lsa ham bo'sh list qaytaradi)
-            if (entities.isEmpty()) {
+          if (entities.isEmpty()) {
                 UiState.Success(emptyList<SearchModel>())
             } else {
-                // map funksiyasini chaqirishdan oldin toDomain() borligini tekshiring
                 UiState.Success(entities.map { it.toDomain() })
             }
         }
@@ -82,7 +80,7 @@ class AppRepositoryImpl private constructor(
     override suspend fun searchFetchAndSave() {
         try {
             val response = productApi.searchProduct("")
-            // Bu yerda response.data null bo'lishi mumkin, shuning uchun ?. ishlating
+
             val dataList = response.data
 
             if (dataList != null) {
@@ -90,7 +88,6 @@ class AppRepositoryImpl private constructor(
                 searchDao.searchUpdateAll(entities)
             }
         } catch (e: Exception) {
-            // Xatoni ko'rish uchun: e.printStackTrace()
         }
     }
 }

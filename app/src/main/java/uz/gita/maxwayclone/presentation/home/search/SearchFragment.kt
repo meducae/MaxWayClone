@@ -71,6 +71,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         viewModel.loaderLiveData.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+
         }
     }
 

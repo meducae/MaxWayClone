@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.remote.api.AuthApi
 import uz.gita.maxwayclone.domain.repository.impl.AuthRepositoryImpl
-import uz.gita.maxwayclone.domain.usecase.auth.RepeatUseCase
-import uz.gita.maxwayclone.domain.usecase.auth.VerifyUseCase
 import uz.gita.maxwayclone.domain.usecase.auth.impl.RepeatUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.auth.impl.VerifyUseCaseImpl
 

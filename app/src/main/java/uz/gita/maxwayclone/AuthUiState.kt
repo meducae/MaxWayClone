@@ -6,7 +6,6 @@ import uz.gita.maxwayclone.data.sources.remote.response.repeat.ResponseRepeat
 import uz.gita.maxwayclone.data.sources.remote.response.update.ResponseUpdate
 import uz.gita.maxwayclone.data.sources.remote.response.user.ResponseUserInfo
 import uz.gita.maxwayclone.data.sources.remote.response.verify.ResponseVerify
-import java.util.Objects
 
 sealed class RegisterUiState{
     object Default: RegisterUiState()

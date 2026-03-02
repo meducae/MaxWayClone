@@ -4,9 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import uz.gita.maxwayclone.data.sources.remote.api.AuthApi
 import uz.gita.maxwayclone.domain.repository.impl.AuthRepositoryImpl
-import uz.gita.maxwayclone.domain.usecase.auth.DeleteAccountUseCase
-import uz.gita.maxwayclone.domain.usecase.auth.GetUserInfoUseCase
-import uz.gita.maxwayclone.domain.usecase.auth.UpdateUserUseCase
 import uz.gita.maxwayclone.domain.usecase.auth.impl.DeleteAccountUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.auth.impl.GetUserInfoUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.auth.impl.UpdateUserUseCaseImpl

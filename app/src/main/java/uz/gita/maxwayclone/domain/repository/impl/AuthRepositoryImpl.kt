@@ -1,6 +1,5 @@
 package uz.gita.maxwayclone.domain.repository.impl
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import uz.gita.maxwayclone.data.sources.remote.api.AuthApi

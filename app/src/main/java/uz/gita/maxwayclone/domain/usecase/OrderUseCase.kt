@@ -1,18 +1,14 @@
-package uz.gita.maxwayclone.domain.repository
+package uz.gita.maxwayclone.domain.usecase
 
-import kotlinx.coroutines.flow.Flow
-import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.data.sources.remote.request.orders.CreateOrderRequest
 import uz.gita.maxwayclone.data.sources.remote.response.order.create_order.CreateOrderResponse
-import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
 
-interface AppRepository {
-   public fun getAds(): Flow<UiState<List<AdsModel>>>
-    suspend fun fetchAndSaveAds()
+interface OrderUseCase {
 
     suspend fun confirmOrder(request: CreateOrderRequest): Result<CreateOrderResponse>
-    fun clearCart()
 
     suspend fun getMyOrders(): Result<List<MyOrdersUIData>>
+
+    fun clearCart()
 }

@@ -20,8 +20,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
-
-
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host) as NavHostFragment
 

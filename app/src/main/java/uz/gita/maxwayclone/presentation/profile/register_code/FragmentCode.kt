@@ -16,16 +16,18 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.R
+import uz.gita.maxwayclone.RepeatUiState
+import uz.gita.maxwayclone.VerifyUiState
+import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.databinding.FragmentRegisterCodeBinding
-import uz.gita.maxwayclone.domain.sevise_locator.ServiceLocator
 
 class FragmentCode : Fragment(R.layout.fragment_register_code) {
 
     private val tokenManager = TokenManager.getInstance()
     private val binding by viewBinding(FragmentRegisterCodeBinding::bind)
 
-    private val viewModel: CodeViewModel by viewModels { ServiceLocator.codeVmFactory }
+    private val viewModel: CodeViewModel by viewModels { CodeViewModelFactory(ApiClient.authApi) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,23 +66,42 @@ class FragmentCode : Fragment(R.layout.fragment_register_code) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    viewModel.events.collect { event ->
-                        when (event) {
-                            is CodeViewModel.Event.VerifySuccess -> {
+                    viewModel.stateVerify.collect { state ->
+                        when (state) {
+
+                            is VerifyUiState.Default -> {
+                                binding.progressBar.isVisible = false
+                            }
+                            is VerifyUiState.Loading -> {
+                                binding.progressBar.isVisible = true
+                            }
+                            is VerifyUiState.Success -> {
                                 findNavController().navigate(R.id.action_fragmentCode_to_nav_profile2, null,
                                     androidx.navigation.NavOptions.Builder()
                                         .setPopUpTo(R.id.nav_host, true)
                                         .build()
                                 )
                             }
-
-                            is CodeViewModel.Event.RepeatSuccess -> {
-                                Toast.makeText(requireContext(), "Kod qayta yuborildi", Toast.LENGTH_SHORT).show()
-                            }
-
-                            is CodeViewModel.Event.Error -> {
+                            else -> {
                                 setOtpError()
-                                Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Xatolik", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.stateRepeat.collect { state ->
+                        when(state){
+                            is RepeatUiState.Default -> {
+                                binding.progressBar.isVisible = false
+                            }
+                            is RepeatUiState.Success -> {
+                                Toast.makeText(requireContext(), "Новий код отправили", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Новий код: ${state.success.data.code}", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(requireContext(), "Xatolik", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }

@@ -17,18 +17,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.R
+import uz.gita.maxwayclone.RegisterUiState
+import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.remote.request.register.RegisterRequest
 import uz.gita.maxwayclone.databinding.FragmentRegisterPhoneBinding
-import uz.gita.maxwayclone.domain.sevise_locator.ServiceLocator
 
 class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
 
     private val binding by viewBinding(FragmentRegisterPhoneBinding::bind)
 
-    private val viewModel: FragmentViewModel by viewModels {
-        ServiceLocator.registerVmFactory
-    }
+    private val viewModel: PhoneViewModel by viewModels { PhoneViewModelFactory(ApiClient.authApi) }
+
     private val tokenManager = TokenManager.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,29 +78,30 @@ class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
     private fun observeRegister() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    when (event) {
-                        is FragmentViewModel.RegisterEvent.Success -> {
-                            Toast.makeText(
-                                requireContext(),
-                                event.response.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Toast.makeText(
-                                requireContext(),
-                                "${event.response.data.code}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
+                viewModel.state.collect { state ->
+                    when(state){
+
+                        is RegisterUiState.Default -> {
+                            binding.progressBar.isVisible = false
+                        }
+
+                        is RegisterUiState.Loading -> {
+                            binding.progressBar.isVisible = true
+                        }
+                        is RegisterUiState.Error -> {
+                            binding.progressBar.isVisible = false
+                            Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
+                        }
+                        is RegisterUiState.Success -> {
                             findNavController().navigate(R.id.action_fragmentPhone_to_fragmentCode)
+                            Toast.makeText(requireContext(), "Код: ${state.success.data.code}", Toast.LENGTH_SHORT).show()
+                            viewModel.reset()
                         }
 
-                        is FragmentViewModel.RegisterEvent.Error -> {
-                            Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
-                            Log.d("TTT", "observeEvents: ${event.message}")
-
-                        }
                     }
                 }
+
             }
         }
     }

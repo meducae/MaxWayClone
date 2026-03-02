@@ -135,27 +135,14 @@ class AuthRepositoryImpl(
                     emit(Result.success(body))
                 } else {
                     emit(Result.failure(Exception("Empty body")))
-                    val response = api.deleteAccount(token)
-                    Log.d(
-                        "TTT",
-                        "body == null: ${response.code()} msg=${response.message()} body=${response.body()} err=${
-                            response.errorBody()?.string()
-                        }"
-                    )
+                    api.deleteAccount(token)
                 }
             } else {
                 emit(Result.failure(Exception(response.message())))
-                Log.d(
-                    "TTT",
-                    "isnot succesfull: ${response.code()} msg=${response.message()} body=${response.body()} err=${
-                        response.errorBody()?.string()
-                    }"
-                )
 
             }
 
         } catch (e: Exception) {
-            Log.d("TTT", "ехсептион error: ", e)
             emit(Result.failure(e))
         }
     }

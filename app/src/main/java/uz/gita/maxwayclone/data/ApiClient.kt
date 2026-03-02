@@ -9,16 +9,16 @@ import uz.gita.maxwayclone.data.sources.remote.api.AuthApi
 
 object ApiClient {
 
-    const val BASE_URL = ""
+    const val URL = "https://4ec0-94-158-59-159.ngrok-free.app/"
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor (ChuckerInterceptor.Builder(instance).build())
         .build()
 
     private val retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(BASE_URL)
+        .baseUrl(URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val api: AuthApi = retrofit.create(AuthApi::class.java)
+    val authApi: AuthApi = retrofit.create(AuthApi::class.java)
 }

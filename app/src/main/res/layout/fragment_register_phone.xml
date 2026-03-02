@@ -163,6 +163,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="@id/buttonContinue"
+        app:layout_constraintBottom_toBottomOf="@id/buttonContinue"
+        app:layout_constraintStart_toStartOf="@id/buttonContinue"
+        app:layout_constraintEnd_toEndOf="@id/buttonContinue"
+        android:backgroundTint="@android:color/holo_blue_dark"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

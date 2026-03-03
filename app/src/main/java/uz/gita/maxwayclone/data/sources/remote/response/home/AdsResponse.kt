@@ -20,3 +20,29 @@ data class AdsStoriesItemResponse(
     val name : String,
     val url : String
 )
+
+data class GeneralResponse<T>(
+    val message : String,
+    val data : List<T>
+)
+
+
+data class CategoriesResponse(
+    val id : Int,
+    val name : String
+)
+data class ProductsResponse(
+    val id : Int,
+    val name : String,
+    val products : List<ProductResponse>
+)
+
+
+data class ProductResponse(
+    val id : Int,
+    val categoryID : Int,
+    val name : String,
+    val description : String,
+    val image : String,
+    val cost : Int
+)

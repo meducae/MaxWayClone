@@ -1,0 +1,125 @@
+* vazifasi: Ads olish
+    - GET, "/ads"
+
+    * vazifasi: Stori videolarni olish
+    - GET,  "/stories"   // linklarni youtube player yordamida ochasiz
+
+    * vazifasi: Filiallar ro'yxatini olish
+    - GET, "/branches"
+
+    * vazifasi: Hamma categoriesni olish uchun
+    - GET, "/categories"
+
+    * vazifasi: Hamma productlarni olish uchun
+    - GET, "/products"
+
+    * vazifasi: Hamma productlarni categori bilan birga olish
+    - GET, "/products_by_category"
+
+    * vazifasi: Productlar search qilganda ishlatiladi, nomi bo'yicha qidiradi
+    - GET, "/products_by_query"
+    - Query params:  "query"
+
+    * vazifasi: Recommended products
+    - GET, "/recommended_products"
+    - body
+      {
+         "ids" : [1,2,5,20,25]    // basketdagi productlar idlari ro'yxati
+      }
+
+    * vazifasi: register
+    - POST, "/register"
+    - Body:
+    {
+        "phone" : "+998901234567"
+    }
+
+    * vazifasi: sms code tasdiqlash. responseda token keladi
+    - POST, "/verify"
+    - Body:
+    {
+        "phone" : "+998901234567"
+        "code" : 1111
+    }
+
+    * vazifasi: qayta sms code olish
+    - POST, "/repeat"
+    - Body:
+    {
+        "phone" : "+998901234567"
+    }
+
+    * vazifasi: Foydalanuvchi verifikatsiya qilgandan keyin ism va tug'ulgan sanasini kitirish uchun,
+    keyinchalik update qilish uchun. Default holatda backent tomonda null, null bo'ladi ism va tugu'lgan sana.
+    Tug'ulgan sana "yyyy-MM-dd" formatda kiriting
+    - PUT, "/update_user_info"
+    - header: token
+    - body:
+    {
+        "name" : "BITA B 11"
+        "birthDate" : "2025-09-01"
+    }
+
+    * vazifasi: Foydalanuvchi ma'lumotlarini qaytaradi
+    - GET, "user_info"
+    - header: token
+
+    * vazifasi: Account o'chirish uchun
+    - DELETE, "delete_account"
+    - header: token
+
+
+    * vazifasi: buyurtma yaratish
+    - POST, "/create_order"
+    - header token berasiz
+    - body (test ma'lumotlar example berilgan. latitude, longitude, address testoviy ma'lumot berib turasizlar hozircha)
+       {
+        "ls" : [
+            {
+                "productID" : 81,
+                "count" : 10
+            },
+
+            {
+                "productID" : 76,
+                "count" : 5
+            }
+        ],
+        "latitude" : "41.00",
+        "longitude" : "69.00",
+        "address" : "TEST"
+    }
+
+    * vazifasi: userni buyurtmalari ro'yxatini olish
+    - GET,  "/my_orders"
+    - headerda token berasiz
+
+    * vazifasi: Userni manzillari ro'yxatini olish
+    - GET,  "/address"
+    - Header: token
+
+    * vazifasi: Manzil qo'shish
+    - POST: "/address/add"
+    - header: token
+    - body:
+       {
+           "name" : "TEST",
+           "latitude" : 41.2445,
+           "longitude" : 69.02213
+       }
+
+    * vazifasi: Manzil ma'lumotlarini o'zgartirish
+    - POST: "/address/edit"
+    - header: token
+    - body:
+       {
+           "id" : 7,
+           "name" : "TEST",
+           "latitude" : 41.2445,
+           "longitude" : 69.02213
+       }
+
+    * vazifasi: Manzil ma'lumotini o'chirish
+    - POST: "/address/delete"
+    - header: token
+    - query params: "id"

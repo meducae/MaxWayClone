@@ -1,15 +1,31 @@
 package uz.gita.maxwayclone.data.sources.remote.api
 
+import okhttp3.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.GeneralResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 
 interface ProductApi {
     @GET("ads")
     suspend fun getAds(): AdsResponse
 
     @GET("stories")
-     suspend fun getStories() : AdsStoriesResponse
+    suspend fun getStories(): AdsStoriesResponse
 
+    @GET("products_by_category")
+    suspend fun getProducts(): GeneralResponse<ProductsResponse>
+
+    @GET("categories")
+    suspend fun getCategories(): GeneralResponse<CategoriesResponse>
+
+    @POST("recommended_products")
+    suspend fun getRecommended(@Body ids: RecommendedRequest): GeneralResponse<ProductResponse>
 }
 // search, product, category, ads, recomen, basket, history

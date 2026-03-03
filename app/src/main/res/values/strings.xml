@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">MaxWayClone</string>
+    <string name="addBasket">Добавить</string>
     <string name="burgers">Бургеры</string>
     <string name="sandwich">Сендвич</string>
     <string name="lavash">Лаваш</string>
     <string name="french_fries">Картошка фри</string>
-    <string name="recommended">Рекомендуем</string>
+    <string name="recommended">Рекомендованные</string>
     <string name="search">Поиск</string>
     <string name="place_order">Оформить заказ</string>
     <string name="attention">Внимание!</string>
@@ -37,4 +38,6 @@
     <string name="phone">Номер телефона</string>
     <string name="birth_date">Дата рождения</string>
     <string name="confirm">Подтвердить</string>
+    <string name="pay">К оплате</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

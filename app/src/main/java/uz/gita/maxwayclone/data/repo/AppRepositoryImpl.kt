@@ -11,32 +11,47 @@ import uz.gita.maxwayclone.app.App
 import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
+import uz.gita.maxwayclone.data.mapper.toModel
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
+import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.CategoriesDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.ProductsDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
+import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
+import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.domain.model.home.AdsModel
+import uz.gita.maxwayclone.domain.model.home.BasketModel
+import uz.gita.maxwayclone.domain.model.home.CategoryModel
+import uz.gita.maxwayclone.domain.model.home.ProductModel
+import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 import uz.gita.maxwayclone.domain.repository.AppRepository
+import kotlin.math.cos
 
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
     private val dao: AdsDao,
-    private val storiesDao: StoriesAdsDao
-): AppRepository {
+    private val storiesDao: StoriesAdsDao,
+    private val productsDao: ProductsDao,
+    private val categoriesDao: CategoriesDao,
+    private val basketDao: BasketDao
+) : AppRepository {
 
 
     companion object {
         private var instance: AppRepositoryImpl? = null
-
-
         fun getInstance(): AppRepositoryImpl {
             if (instance == null) {
-
                 val api = ApiClient.getProductApi()
                 val db = AppDatabase.getDatabase(App.instance).getDao()
                 val storiesDao = AppDatabase.getDatabase(App.instance).getStoriesDao()
-                instance = AppRepositoryImpl(api, db , storiesDao)
+                val productsDao = AppDatabase.getDatabase(App.instance).getProductsDao()
+                val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
+                val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
+                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao)
             }
             return instance!!
         }
@@ -65,9 +80,9 @@ class AppRepositoryImpl private constructor(
 
     override fun getStories(): Flow<UiState<List<StoriesModel>>> =
         storiesDao.getAllAds().map { entities ->
-            if (entities.isEmpty()){
+            if (entities.isEmpty()) {
                 UiState.Success(emptyList())
-            }else{
+            } else {
                 UiState.Success(entities.map { it.toDomain() })
             }
         }
@@ -76,13 +91,139 @@ class AppRepositoryImpl private constructor(
     override suspend fun fetchAndSaveStories() {
         try {
             val response = productApi.getStories()
-            val entities = response.data?.map { it.toEntity() } ?: emptyList()
+            val entities = response.data.map { it.toEntity() } ?: emptyList()
             storiesDao.updateAllAds(entities)
             Log.d("TTT", "fetchAndSaveStories: ${response.message}")
         } catch (e: Exception) {
             Log.e("TTT", "fetchAndSaveStories xatolik: ${e.message}")
         }
     }
+
+    override fun getProducts(): Flow<UiState<List<ProductModel>>> {
+        return productsDao.getAllProducts().map { entities ->
+            if (entities.isEmpty()) {
+                UiState.Success(emptyList())
+            } else {
+                UiState.Success(entities.map { it.toModel() })
+            }
+        }
     }
+
+    override suspend fun fetchAndSaveProducts() {
+        try {
+            val response = productApi.getProducts()
+            val entities = mutableListOf<ProductsEntity>()
+            response.data.forEach { category ->
+                val categoryName = category.name
+                category.products.forEach { product ->
+                    entities.add(
+                        ProductsEntity(
+                            id = product.id,
+                            categoryId = product.categoryID,
+                            categoryName = categoryName,
+                            name = product.name,
+                            description = product.description,
+                            imgUrl = product.image,
+                            cost = product.cost
+                        )
+                    )
+                }
+            }
+            productsDao.updateAllProducts(entities)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    override fun getCategories(): Flow<UiState<List<CategoryModel>>> = categoriesDao.getAllCategories().map { entities ->
+        if (entities.isEmpty()) {
+            UiState.Success(emptyList())
+        } else {
+            UiState.Success(entities.map { it.toModel() })
+        }
+    }
+
+    override suspend fun fetchAndSaveCategories() {
+        try {
+            val response = productApi.getCategories()
+            val entity = response.data.map { it.toEntity() }
+            categoriesDao.updateAllCategories(entity)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    //    override suspend fun addToBasket(product: ProductModel) {
+//        val existingItem = basketDao.getBasketItemById(product.id)
+//
+//        if (existingItem != null) {
+//            // Agar savatda bunday mahsulot allaqachon bo'lsa, sonini bittaga oshiramiz
+//            basketDao.incrementItem(product.id)
+//        } else {
+//            // Agar bazada umuman yo'q bo'lsa, o'zini butunlay yangidan solamiz
+//            basketDao.insertItem(
+//
+//            )
+//        }
+//    }
+    override suspend fun addToBasket(productModel: ProductModel) {
+        val existingItem = basketDao.getBasketItemById(productModel.id)
+        if (existingItem != null) {
+            basketDao.increment(productModel.id)
+        } else {
+            basketDao.insertItem(
+                BasketEntity(
+                    productId = productModel.id,
+                    name = productModel.name,
+                    imageUrl = productModel.image,
+                    description = productModel.description,
+                    cost = productModel.cost,
+                    count = 1
+                )
+            )
+        }
+    }
+
+    override suspend fun plusToBasket(productId: Int) {
+        basketDao.increment(productId)
+    }
+
+    override suspend fun decrementBasketItem(id: Int, currentCount: Int) {
+        if (currentCount > 1) {
+            basketDao.decrement(id)
+        } else {
+            basketDao.deleteItem(id)
+        }
+    }
+
+    override fun getBasketItems(): Flow<UiState<List<BasketModel>>> {
+        val data = basketDao.getAllBasketItems().map { entities ->
+            if (entities.isEmpty()) {
+                UiState.Success(emptyList())
+            } else {
+                UiState.Success(entities.map { it.toModel() })
+            }
+        }
+        return data
+    }
+
+    override suspend fun clearBasket() {
+        basketDao.deleteBasket()
+    }
+
+    override fun getBasketTotalPrice(): Flow<Long> {
+        return basketDao.getTotalPrice()
+    }
+
+    override suspend fun getRecommendedProducts(): UiState<List<RcProductModel>> {
+        return try {
+            val idList = basketDao.getBasketItemId()
+            val response = productApi.getRecommended(RecommendedRequest(ids = idList))
+            UiState.Success(response.data.map { it.toModel() })
+        } catch (e: Exception) {
+            UiState.Error("Xatolik")
+        }
+    }
+}
 
 

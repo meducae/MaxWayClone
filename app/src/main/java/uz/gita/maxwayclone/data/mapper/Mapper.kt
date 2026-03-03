@@ -5,11 +5,13 @@ import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.CategoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
+import uz.gita.maxwayclone.data.sources.remote.model.BranchDto
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
+import uz.gita.maxwayclone.domain.model.branch.Branch
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
@@ -51,3 +53,12 @@ fun List<ProductModel>.toTypeModel(basketItems: List<BasketModel> = emptyList())
 
 fun BasketEntity.toModel() = BasketModel(name = name , productId = productId , imageUrl = imageUrl , count = count , cost =  cost , description = description)
 fun ProductResponse.toModel() = RcProductModel(name = name , categoryID = categoryID , id = id , image = image , cost = cost , description = description )
+
+fun BranchDto.toDomain() = Branch(
+    id = id,
+    name = name,
+    address = address,
+    phone = phone,
+    openTime = openTime,
+    closeTime = closeTime
+)

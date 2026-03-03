@@ -87,5 +87,11 @@
         tools:layout="@layout/fragment_no_connection"
         android:name="uz.gita.maxwayclone.presentation.no_internet.FragmentNoInternet"
         android:label="FragmentNoInternet" />
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/fragmentBranches"
+        tools:layout="@layout/fragment_branches"
+        android:name="uz.gita.maxwayclone.presentation.branch.FragmentBranches"
+        android:label="FragmentBranches" />
 
 </navigation>

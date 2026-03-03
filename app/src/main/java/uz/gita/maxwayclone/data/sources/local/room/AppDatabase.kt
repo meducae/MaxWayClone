@@ -8,6 +8,7 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.CategoriesDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.ProductsDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
@@ -16,7 +17,7 @@ import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
 
-@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class , SearchEntity::class] , version = 5 )
+@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class , SearchEntity::class] , version = 6 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AdsDao
     abstract fun getStoriesDao() : StoriesAdsDao

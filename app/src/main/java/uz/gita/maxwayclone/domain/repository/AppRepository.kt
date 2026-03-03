@@ -8,6 +8,7 @@ import uz.gita.maxwayclone.domain.model.home.CategoryModel
 import uz.gita.maxwayclone.domain.model.home.OrderCreated
 import uz.gita.maxwayclone.domain.model.home.ProductModel
 import uz.gita.maxwayclone.domain.model.home.RcProductModel
+import uz.gita.maxwayclone.domain.model.home.SearchModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 
 interface AppRepository {
@@ -27,7 +28,6 @@ interface AppRepository {
     fun getBasketTotalPrice() : Flow<Long>
     suspend fun getRecommendedProducts() : UiState<List<RcProductModel>>
     fun createOrder() : Flow<UiState<OrderCreated>>
-
     fun searchProduct(query: String): Flow<UiState<List<SearchModel>>>
     suspend fun searchFetchAndSave()
 

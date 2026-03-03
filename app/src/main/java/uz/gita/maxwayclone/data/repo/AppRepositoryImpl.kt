@@ -2,6 +2,7 @@ package uz.gita.maxwayclone.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -10,6 +11,9 @@ import uz.gita.maxwayclone.app.App
 import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
+import uz.gita.maxwayclone.data.mapper.toModel
+import uz.gita.maxwayclone.data.mapper.toRequest
+import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
@@ -58,7 +62,7 @@ class AppRepositoryImpl private constructor(
                 val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
                 val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
                 val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
-                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao)
+                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao,searchDb)
             }
             return instance!!
         }
@@ -97,9 +101,7 @@ class AppRepositoryImpl private constructor(
     override suspend fun searchFetchAndSave() {
         try {
             val response = productApi.searchProduct("")
-
             val dataList = response.data
-
             if (dataList != null) {
                 val entities = dataList.map { it.toEntity() }
                 searchDao.searchUpdateAll(entities)
@@ -123,9 +125,7 @@ class AppRepositoryImpl private constructor(
             val response = productApi.getStories()
             val entities = response.data.map { it.toEntity() } ?: emptyList()
             storiesDao.updateAllAds(entities)
-            Log.d("TTT", "fetchAndSaveStories: ${response.message}")
         } catch (e: Exception) {
-            Log.e("TTT", "fetchAndSaveStories xatolik: ${e.message}")
         }
     }
 

@@ -15,6 +15,7 @@ import android.view.View
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.load.DataSource
+import uz.gita.maxwayclone.UiState.Loading.formatPrice
 
 class SearchAdapter : ListAdapter<SearchModel, SearchAdapter.VH>(DiffCallBack) {
     private var onItemClickListener: ((SearchModel) -> Unit)? = null
@@ -38,7 +39,7 @@ class SearchAdapter : ListAdapter<SearchModel, SearchAdapter.VH>(DiffCallBack) {
 
                 tvProductName.text = model.name
                 tvProductDesc.text = model.description
-                tvProductPrice.text = "${model.cost} сум"
+                tvProductPrice.text = "${model.cost.formatPrice()} сум"
 
                 itemProgress.visibility = View.VISIBLE
 

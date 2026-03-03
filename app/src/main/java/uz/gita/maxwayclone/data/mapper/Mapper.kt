@@ -6,6 +6,9 @@ import uz.gita.maxwayclone.data.sources.local.room.entity.CategoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
 import uz.gita.maxwayclone.data.sources.remote.model.BranchDto
+import uz.gita.maxwayclone.data.sources.remote.model.GetBasketItemOrder
+import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
+import uz.gita.maxwayclone.data.sources.remote.request.OrderItem
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
@@ -29,9 +32,9 @@ fun AdsStoriesItemResponse.toEntity() = StoriesEntity(id=id , name = name , url 
 fun ProductsEntity.toModel() = ProductModel(id , categoryId , categoryName , name , description , image = imgUrl , cost = cost)
 fun CategoriesResponse.toEntity() = CategoriesEntity(id = id , name = name)
 fun CategoriesEntity.toModel() = CategoryModel(id = id , name = name)
+fun GetBasketItemOrder.toRequest() = OrderItem(productID = productId , count = count)
 fun List<ProductModel>.toTypeModel(basketItems: List<BasketModel> = emptyList()): List<ProductTypeModel> {
     val result = mutableListOf<ProductTypeModel>()
-
     this
         .groupBy { it.categoryID to it.categoryName }
         .forEach { (category, products) ->

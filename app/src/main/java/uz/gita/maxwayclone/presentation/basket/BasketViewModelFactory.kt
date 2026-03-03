@@ -7,6 +7,7 @@ import uz.gita.maxwayclone.data.repo.AppRepositoryImpl
 import uz.gita.maxwayclone.domain.usecase.AddBasketItemUseCase
 import uz.gita.maxwayclone.domain.usecase.impl.AddBasketItemImpl
 import uz.gita.maxwayclone.domain.usecase.impl.ClearBasketUseCaseImpl
+import uz.gita.maxwayclone.domain.usecase.impl.CreateOrderUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.impl.DeleteBasketItemUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.impl.GetBasketItemsImpl
 import uz.gita.maxwayclone.domain.usecase.impl.GetBasketTotalPriceUseCaseImpl
@@ -23,6 +24,7 @@ class BasketViewModelFactory : ViewModelProvider.Factory {
         val getRecommendedUseCase = GetRecommendedProductsUseCaseImpl(repository)
         val addBasketItemUseCase = AddBasketItemImpl(repository)
         val plusBasketItemUseCase = PlusToBasketUseCaseImpl(repository)
+        val createOrderUseCase = CreateOrderUseCaseImpl(repository)
         return BasketViewModelImpl(
             getBasketItemsUseCase,
             deleteBasketItemUseCase,
@@ -30,7 +32,8 @@ class BasketViewModelFactory : ViewModelProvider.Factory {
             getBasketTotalPrice,
             getRecommendedUseCase,
             addBasketItemUseCase,
-            plusBasketItemUseCase
+            plusBasketItemUseCase,
+            createOrderUseCase
         ) as T
     }
 }

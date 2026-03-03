@@ -8,6 +8,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import uz.gita.maxwayclone.UiState
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
+import uz.gita.maxwayclone.data.sources.remote.model.GetBasketItemOrder
 
 @Dao
 interface BasketDao {
@@ -17,6 +18,12 @@ interface BasketDao {
 
     @Query("Select productId From basket_table")
     fun getBasketItemId() : List<Int>
+
+    @Query("Select productId , count From basket_table")
+    fun getBasketOrder() : List<GetBasketItemOrder>
+
+    @Query("SELECT COUNT(*) FROM basket_table")
+    fun getBasketSize() : Int
 
     @Query("SELECT * FROM basket_table WHERE productId = :id")
     suspend fun getBasketItemById(id: Int): BasketEntity?
@@ -38,4 +45,5 @@ interface BasketDao {
 
     @Query("DELETE from basket_table")
     suspend fun deleteBasket()
+
 }

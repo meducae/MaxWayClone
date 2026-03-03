@@ -14,11 +14,16 @@
             app:destination="@id/storiesFragment" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/nav_basket"
         android:name="uz.gita.maxwayclone.presentation.basket.BasketFragment"
         android:label="BasketFragment"
-        tools:layout="@layout/fragment_basket" />
+        tools:layout="@layout/fragment_basket" >
+        <action
+            android:id="@+id/action_nav_basket_to_fragmentName"
+            app:destination="@id/fragmentName" />
+    </dialog>
+
 
     <fragment
         android:id="@+id/nav_orders"

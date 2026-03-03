@@ -3,8 +3,12 @@ package uz.gita.maxwayclone.data.sources.remote.api
 import okhttp3.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
+import uz.gita.maxwayclone.data.sources.local.LocalStorage
+import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
+import uz.gita.maxwayclone.data.sources.remote.response.create_order.CreateOrderResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
@@ -27,5 +31,8 @@ interface ProductApi {
 
     @POST("recommended_products")
     suspend fun getRecommended(@Body ids: RecommendedRequest): GeneralResponse<ProductResponse>
+
+    @POST("create_order")
+    suspend fun createOrder(@Header("token") token: String, @Body request: CreateOrder): CreateOrderResponse
 }
 // search, product, category, ads, recomen, basket, history

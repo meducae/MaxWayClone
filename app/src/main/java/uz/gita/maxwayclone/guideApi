@@ -93,7 +93,6 @@
     * vazifasi: userni buyurtmalari ro'yxatini olish
     - GET,  "/my_orders"
     - headerda token berasiz
-
     * vazifasi: Userni manzillari ro'yxatini olish
     - GET,  "/address"
     - Header: token

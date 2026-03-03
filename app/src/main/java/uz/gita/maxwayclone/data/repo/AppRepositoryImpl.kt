@@ -3,6 +3,7 @@ package uz.gita.maxwayclone.data.repo
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -12,6 +13,8 @@ import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
 import uz.gita.maxwayclone.data.mapper.toModel
+import uz.gita.maxwayclone.data.mapper.toRequest
+import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
@@ -21,10 +24,12 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
+import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
+import uz.gita.maxwayclone.domain.model.home.OrderCreated
 import uz.gita.maxwayclone.domain.model.home.ProductModel
 import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
@@ -222,6 +227,25 @@ class AppRepositoryImpl private constructor(
             UiState.Success(response.data.map { it.toModel() })
         } catch (e: Exception) {
             UiState.Error("Xatolik")
+        }
+    }
+
+    override fun createOrder(): Flow<UiState<OrderCreated>> = flow {
+        try {
+            val basketItemList = basketDao.getBasketSize()
+            if (basketItemList != 0) {
+                val basketItems = basketDao.getBasketOrder()
+                val request = basketItems.map { it.toRequest() }
+                val requestList = CreateOrder(ls = request, latitude = "123213123", longitude = "232342423", address = "Amerika")
+                val token = TokenManager.getInstance().getToken()
+                val response = productApi.createOrder(token = token, request = requestList)
+                emit(UiState.Success(OrderCreated(response.message)))
+                basketDao.deleteBasket()
+            }else{
+                emit(UiState.Success(OrderCreated("Savat bo'sh!")))
+            }
+        } catch (e: Exception) {
+            emit(UiState.Error("Buyurtma yaratishda xatolik!"))
         }
     }
 }

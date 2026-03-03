@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_bottom_sheet">
 
-    <LinearLayout
+
+
+
+    <FrameLayout
         android:id="@+id/payContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="#FFFFFF"
         android:elevation="10dp"
-        android:padding="16dp">
-
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <ProgressBar
+            android:id="@+id/ProgressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:visibility="gone"
+            android:background="@drawable/bg_pay_button"
+            android:layout_gravity="center"/>
         <FrameLayout
             android:id="@+id/btnPay"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_pay_button">
+            android:background="@drawable/bg_pay_button"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -31,6 +42,7 @@
                 android:text="@string/pay"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
             <TextView
                 android:id="@+id/totalPrice"
                 android:layout_width="wrap_content"
@@ -38,18 +50,22 @@
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginEnd="15dp"
                 android:fontFamily="@font/roboto_medium"
-                tools:text="722 000 сум"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="722 000 сум" />
         </FrameLayout>
-    </LinearLayout>
+    </FrameLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/payContainer"
-        android:fillViewport="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/payContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,19 +123,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textColor="@color/black"
                 android:fontFamily="@font/golos_text_medium"
                 android:text="@string/recommended"
+                android:textColor="@color/black"
                 android:textSize="24sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recommendation"
                 android:layout_width="match_parent"
-                android:background="@color/btn_light_grey"
                 android:layout_height="wrap_content"
+                android:background="@color/btn_light_grey"
                 android:nestedScrollingEnabled="false" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,16 +37,15 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setupWithNavController(navController)
-        bottomNav.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.nav_basket) {
-                BasketFragment().show(
-                    supportFragmentManager,
-                    "BasketBottomSheet"
-                )
-                false
-            } else {
-                NavigationUI.onNavDestinationSelected(item, navController)
-                true
+        
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.nav_home, R.id.nav_profile, R.id.nav_orders, R.id.nav_basket -> {
+                    bottomNav.visibility = android.view.View.VISIBLE
+                }
+                else -> {
+                    bottomNav.visibility = android.view.View.GONE
+                }
             }
         }
     }

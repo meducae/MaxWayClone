@@ -3,15 +3,19 @@ package uz.gita.maxwayclone.presentation.basket
 import android.app.Dialog
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -118,6 +122,11 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
         binding.delete.setOnClickListener {
             viewModel.clearBasket()
         }
+        binding.btnPay.setOnClickListener {
+            viewModel.payOrder()
+            binding.btnPay.visibility = View.GONE
+            binding.ProgressBar.visibility = View.VISIBLE
+        }
     }
 
 
@@ -128,10 +137,6 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
         binding.recommendation.adapter = recommendedAdapter
         binding.recommendation.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         (binding.recommendation.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
-
-        // Pager effektini qo'shish (2 ta mahsulot sig'adi va sahifa kabi o'tadi)
-        binding.recommendation.onFlingListener = null
-        androidx.recyclerview.widget.PagerSnapHelper().attachToRecyclerView(binding.recommendation)
     }
 
     fun loadObserveData() {
@@ -151,6 +156,21 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
                 recommendedAdapter.submitList(items)
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.moveToRegister.collect {
+                findNavController().navigate(R.id.fragmentName)
+                dismiss()
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.showResult.collect { message ->
+                binding.btnPay.visibility = View.VISIBLE
+                binding.ProgressBar.visibility = View.GONE
+                Toast.makeText(requireContext() , message , LENGTH_SHORT).show()
+            }
+        }
+
     }
 }
 

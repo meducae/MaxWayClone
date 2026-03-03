@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.setupWithNavController(navController)
-        
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.nav_home, R.id.nav_profile, R.id.nav_orders, R.id.nav_basket -> {

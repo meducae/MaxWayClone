@@ -43,5 +43,10 @@ interface ProductApi {
     @GET("notifications")
     suspend fun getNotifications(): Response<NotificationResponse>
 
+
+
+    @GET("my_orders")
+    suspend fun getAllOrders(@Header("token") token:String): MyOrdersResponse
+
 }
 // search, product, category, ads, recomen, basket, history

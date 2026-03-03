@@ -14,6 +14,7 @@ import uz.gita.maxwayclone.data.mapper.toModel
 import uz.gita.maxwayclone.data.mapper.toRequest
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
+import uz.gita.maxwayclone.data.mapper.toUIData
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.CategoriesDao
@@ -23,10 +24,12 @@ import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.NotificationDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.domain.model.home.AdsModel
+import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
 import uz.gita.maxwayclone.domain.model.home.NotificationModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
@@ -303,4 +306,22 @@ class AppRepositoryImpl private constructor(
     }
 }
 
+
+
+
+    override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> =
+         withContext(Dispatchers.IO) {
+            try {
+                val token = "ef7b791a897638ca0beb06cf67be0092"
+                val response = productApi.getAllOrders(token)
+
+
+                val uiDataList = response.data.map { it.toUIData() }
+
+                Result.success(uiDataList)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+}
 

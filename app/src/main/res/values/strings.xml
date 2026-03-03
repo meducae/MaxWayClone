@@ -36,6 +36,7 @@
     <string name="phone">Номер телефона</string>
     <string name="birth_date">Дата рождения</string>
     <string name="confirm">Подтвердить</string>
+    <string name="you_don_t_have_any_active_order_yet">У вас пока нет активных заказов</string>
     <string name="save">Сохранить</string>
     <string name="delete_account">Удалить учетную запись</string>
     <string name="profile_edit">Изменения данных</string>

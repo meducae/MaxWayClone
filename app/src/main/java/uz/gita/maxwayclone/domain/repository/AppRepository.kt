@@ -11,6 +11,7 @@ import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.SearchModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 import uz.gita.maxwayclone.domain.model.home.NotificationModel
+import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
 
 interface AppRepository {
     fun getAds(): Flow<UiState<List<AdsModel>>>
@@ -35,4 +36,8 @@ interface AppRepository {
 
     fun getNotification(): Flow<UiState<List<NotificationModel>>>
     suspend fun fetchAndSaveNotification()
+
+
+
+    suspend fun getMyOrders(): Result<List<MyOrdersUIData>>
 }

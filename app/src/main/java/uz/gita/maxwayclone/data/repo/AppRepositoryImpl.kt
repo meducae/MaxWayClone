@@ -13,7 +13,6 @@ import uz.gita.maxwayclone.data.mapper.toEntity
 import uz.gita.maxwayclone.data.mapper.toModel
 import uz.gita.maxwayclone.data.mapper.toRequest
 import uz.gita.maxwayclone.data.sources.local.TokenManager
-import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.mapper.toUIData
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
@@ -120,6 +119,17 @@ class AppRepositoryImpl private constructor(
         }
     }
 
+    override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> = withContext(Dispatchers.IO) {
+                try {
+                    val token = TokenManager.getToken()
+                    val response = productApi.getAllOrders(token)
+                    val uiDataList = response.data.map { it.toUIData() }
+                    Result.success(uiDataList)
+                } catch (e: Exception) {
+                    Result.failure(e)
+                }
+        }
+
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
           if (entities.isEmpty()) {
@@ -214,19 +224,7 @@ class AppRepositoryImpl private constructor(
         }
     }
 
-    //    override suspend fun addToBasket(product: ProductModel) {
-//        val existingItem = basketDao.getBasketItemById(product.id)
-//
-//        if (existingItem != null) {
-//            // Agar savatda bunday mahsulot allaqachon bo'lsa, sonini bittaga oshiramiz
-//            basketDao.incrementItem(product.id)
-//        } else {
-//            // Agar bazada umuman yo'q bo'lsa, o'zini butunlay yangidan solamiz
-//            basketDao.insertItem(
-//
-//            )
-//        }
-//    }
+
     override suspend fun addToBasket(productModel: ProductModel) {
         val existingItem = basketDao.getBasketItemById(productModel.id)
         if (existingItem != null) {
@@ -309,19 +307,5 @@ class AppRepositoryImpl private constructor(
 
 
 
-    override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> =
-         withContext(Dispatchers.IO) {
-            try {
-                val token = "ef7b791a897638ca0beb06cf67be0092"
-                val response = productApi.getAllOrders(token)
 
-
-                val uiDataList = response.data.map { it.toUIData() }
-
-                Result.success(uiDataList)
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
-        }
-}
 

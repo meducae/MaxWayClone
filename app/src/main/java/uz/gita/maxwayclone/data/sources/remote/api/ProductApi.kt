@@ -17,6 +17,7 @@ import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.SearchResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.NotificationResponse
+import uz.gita.maxwayclone.data.sources.remote.response.order.my_order.MyOrdersResponse
 
 interface ProductApi {
     @GET("ads")

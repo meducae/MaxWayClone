@@ -45,6 +45,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         Log.d("TTT", "onCreateView: ")
         return super.onCreateView(inflater, container, savedInstanceState)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
@@ -60,19 +61,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.notification.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_notificationFragment)
         }
-
         setupAdapter()
         observeViewModel()
         setupStoriesAdapter()
         categoriesConfiguration()
-
-        Log.d("TTT", "onViewCreated: ")
         storiesAdapter.setListener { position ->
             val bundle = Bundle().apply {
                 putInt("position", position)
             }
             findNavController().navigate(R.id.action_nav_home_to_storiesFragment, bundle)
         }
+
+
 
 
         binding.products.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -98,11 +98,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
         productsAdapter.setAdListener { productModel ->
-            Log.d("BTT", "onViewCreated: ${productModel.name}")
             viewModel.addBasket(productModel)
         }
-        productsAdapter.setOnDecrementClickListener { id , currentCount ->
-            viewModel.removeBasket(id , currentCount)
+        productsAdapter.setOnDecrementClickListener { id, currentCount ->
+            viewModel.removeBasket(id, currentCount)
         }
     }
 
@@ -179,21 +178,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.storiesFlowData.collectLatest { data ->
-                    storiesAdapter.submitList(data)
-                }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.productsFlowData.collectLatest { productsData ->
-                    productsAdapter.submitList(productsData)
+            viewModel.storiesFlowData.collectLatest { data ->
+                storiesAdapter.submitList(data)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.categoriesFlowData.collectLatest { categoryModels ->
-                    categoriesAdapter.submitList(categoryModels)
-                }
+            viewModel.productsFlowData.collectLatest { productsData ->
+                productsAdapter.submitList(productsData)
+                binding.menuHome.visibility = View.VISIBLE
+                binding.progressBar.visibility  = View.GONE
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.categoriesFlowData.collectLatest { categoryModels ->
+                categoriesAdapter.submitList(categoryModels)
+            }
         }
     }
 

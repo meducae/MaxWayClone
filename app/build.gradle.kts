@@ -40,7 +40,7 @@ android {
         buildConfig = true
     }
     defaultConfig{
-        buildConfigField("String" , "BASE_URL" , "\"https://newsworthy-cosmological-song.ngrok-free.dev/\"")
+        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
     }
 
 }

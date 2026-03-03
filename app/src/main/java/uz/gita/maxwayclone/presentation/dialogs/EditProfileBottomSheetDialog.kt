@@ -3,6 +3,7 @@ package uz.gita.maxwayclone.presentation.dialogs
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,18 +12,19 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.EditProfileUiState
 import uz.gita.maxwayclone.R
+import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.remote.request.register.UpdateRequest
 import uz.gita.maxwayclone.databinding.BottomSheetDialogBinding
-import uz.gita.maxwayclone.domain.sevise_locator.ServiceLocator
 import uz.gita.maxwayclone.presentation.profile.edit_profile.EditProfileViewModel
+import uz.gita.maxwayclone.presentation.profile.edit_profile.EditProfileViewModelFactory
 
 class EditProfileBottomSheetDialog(
     private val onSuccess: () -> Unit
 ) : BottomSheetDialogFragment(R.layout.bottom_sheet_dialog) {
-
-    private val viewModel: EditProfileViewModel by viewModels { ServiceLocator.editProfileVmFactory }
+    private val viewModel: EditProfileViewModel by viewModels { EditProfileViewModelFactory(ApiClient.authApi) }
     private val binding by viewBinding(BottomSheetDialogBinding::bind)
     private val tokenManager = TokenManager.getInstance()
 
@@ -72,7 +74,7 @@ class EditProfileBottomSheetDialog(
             viewModel.deleteAccount(token)
         }
 
-        observeEvents()
+        observeState()
     }
 
     override fun onResume() {
@@ -81,37 +83,53 @@ class EditProfileBottomSheetDialog(
         binding.userName.setText(tokenManager.getName())
     }
 
-    private fun observeEvents() {
+    private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    when (event) {
 
-                        is EditProfileViewModel.Event.GetInfoSuccess -> {
+                viewModel.state.collect { state ->
+                    when (state) {
+
+                        EditProfileUiState.Default -> {
+                             binding.progressBar.visibility = View.GONE
+                        }
+
+                        EditProfileUiState.Loading -> {
+                             binding.progressBar.isVisible = true
+                        }
+
+                        is EditProfileUiState.GetInfoSuccess -> {
+                            binding.progressBar.visibility = View.GONE
+
                             if (alreadyFilled) return@collect
                             alreadyFilled = true
 
-                            val info = event.data
+                            val info = state.data
                             val name = info.data.name ?: ""
-                            if (name.isBlank()){
+
+                            if (name.isBlank()) {
                                 binding.birthday.setText(tokenManager.getBirthday())
                                 binding.userName.setText(tokenManager.getName())
-                            }else{
+                            } else {
                                 binding.userName.setText(info.data.name)
                                 binding.birthday.setText(info.data.birthDate)
                             }
 
+                            viewModel.reset()
                         }
 
-                        is EditProfileViewModel.Event.UpdateSuccess -> {
+                        is EditProfileUiState.UpdateSuccess -> {
+                            binding.progressBar.visibility = View.GONE
                             Toast.makeText(requireContext(), "Обновлено", Toast.LENGTH_SHORT).show()
 
                             tokenManager.saveName(binding.userName.text.toString().trim())
                             onSuccess.invoke()
+                            viewModel.reset()
                             dismiss()
                         }
 
-                        is EditProfileViewModel.Event.DeleteSuccess -> {
+                        is EditProfileUiState.DeleteSuccess -> {
+                            binding.progressBar.visibility = View.GONE
                             tokenManager.clear()
 
                             val bundle = Bundle().apply { putBoolean("DELETED", true) }
@@ -123,11 +141,15 @@ class EditProfileBottomSheetDialog(
                                     .setPopUpTo(R.id.nav_host, true)
                                     .build()
                             )
+
+                            viewModel.reset()
                             dismiss()
                         }
 
-                        is EditProfileViewModel.Event.Error -> {
-                            Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                        is EditProfileUiState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            viewModel.reset()
                         }
                     }
                 }

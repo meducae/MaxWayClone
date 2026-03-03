@@ -1,10 +1,6 @@
 package uz.gita.maxwayclone.presentation.profile.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -17,16 +13,17 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.GetUserUiState
 import uz.gita.maxwayclone.R
+import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.databinding.FragmentProfileBinding
-import uz.gita.maxwayclone.domain.sevise_locator.ServiceLocator
+import uz.gita.maxwayclone.presentation.dialogs.DeleteConfirmDialog
 import uz.gita.maxwayclone.presentation.dialogs.EditProfileBottomSheetDialog
-import uz.gita.maxwayclone.presentation.dialogs.LogoutConfirmDialog
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private val viewModel: ProfileViewModel by viewModels { ServiceLocator.profileVmFactory }
+    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory(ApiClient.authApi) }
     private val tokenManager = TokenManager.getInstance()
     private val binding by viewBinding(FragmentProfileBinding::bind)
 
@@ -47,7 +44,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.buttonLogout.setOnClickListener {
-            LogoutConfirmDialog().show(parentFragmentManager, "logout_dialog")
+            DeleteConfirmDialog().show(parentFragmentManager, "logout_dialog")
         }
 
         observeEvents()
@@ -69,11 +66,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun observeEvents() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    when (event) {
+                viewModel.state.collect{ state ->
+                    when (state) {
 
-                        is ProfileViewModel.Event.GetInfoSuccess -> {
-                            val name = event.data.data.name ?: ""
+                        is GetUserUiState.Default -> {
+                            binding.progressBar.isVisible = false
+                        }
+                        is GetUserUiState.Loading -> {
+                            binding.progressBar.isVisible = true
+                        }
+                        is GetUserUiState.Success -> {
+                            val name = state.success.data.name ?: ""
+                            binding.progressBar.isVisible = false
 
                             if (name.isNotEmpty()){
                                 binding.userName.text = name
@@ -81,12 +85,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             }else{
                                 binding.userName.text = tokenManager.getName()
                             }
-
                         }
+                        is GetUserUiState.Error -> {
+                            Toast.makeText(requireContext(), state.error , Toast.LENGTH_SHORT).show()
 
-                        is ProfileViewModel.Event.Error -> {
-                            Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
-                            Log.d("TTT", "observeEvents: ${event.message}")
                         }
                     }
                 }
@@ -98,7 +100,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.userPhone.text = tokenManager.getPhone()
 
         val token = tokenManager.getToken()
-        if (!token.isEmpty()) {
+        if (token.isNotBlank()) {
             binding.panelAccount.visibility = View.INVISIBLE
             binding.editAccount.visibility = View.VISIBLE
             binding.buttonLogout.visibility = View.VISIBLE
@@ -107,6 +109,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             binding.editAccount.visibility = View.INVISIBLE
             binding.buttonLogout.visibility = View.INVISIBLE
         }
-
     }
 }

@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.RepeatUiState
+import uz.gita.maxwayclone.VerifyUiState
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.remote.request.register.RepeatRequest
 import uz.gita.maxwayclone.data.sources.remote.request.register.VerifyRequest
@@ -21,14 +21,11 @@ class CodeViewModel(
     private val tokenManager: TokenManager
 ) : ViewModel() {
 
-    sealed class Event {
-        object VerifySuccess : Event()
-        object RepeatSuccess : Event()
-        data class Error(val message: String) : Event()
-    }
+    private val _stateVerify = MutableStateFlow<VerifyUiState>(VerifyUiState.Default)
+    val stateVerify = _stateVerify.asStateFlow()
 
-    private val _events = MutableSharedFlow<Event>()
-    val events = _events.asSharedFlow()
+    private val _stateRepeat = MutableStateFlow<RepeatUiState>(RepeatUiState.Default)
+    val stateRepeat = _stateRepeat.asStateFlow()
 
     private val _timeLeft = MutableStateFlow(60)
     val timeLeft = _timeLeft.asStateFlow()
@@ -58,12 +55,12 @@ class CodeViewModel(
         viewModelScope.launch {
             verifyUseCase(VerifyRequest(phone = phone, code = code))
                 .collect { result ->
-                    result.onSuccess {
-                        _events.emit(Event.VerifySuccess)
-                        tokenManager.saveToken(it.data.token)
+                    result.onSuccess { data->
+                        _stateVerify.value = VerifyUiState.Success(data)
+                        tokenManager.saveToken(data.data.token)
                     }
                     result.onFailure { e ->
-                        _events.emit(Event.Error(e.message ?: "Kod xato"))
+                        _stateVerify.value = VerifyUiState.Error(error = e.message ?: "Xatolik")
                     }
                 }
         }
@@ -75,12 +72,11 @@ class CodeViewModel(
         viewModelScope.launch {
             repeatUseCase(RepeatRequest(phone = phone))
                 .collect { result ->
-                    result.onSuccess {
-                        _events.emit(Event.RepeatSuccess)
-                        startTimer(60)
+                    result.onSuccess { data ->
+                        _stateRepeat.value = RepeatUiState.Success(data)
                     }
                     result.onFailure { e ->
-                        _events.emit(Event.Error(e.message ?: "Qayta yuborib bo‘lmadi"))
+                        _stateRepeat.value = RepeatUiState.Error(e.message ?: "Xatolik")
                     }
                 }
         }

@@ -4,12 +4,12 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import uz.gita.maxwayclone.BuildConfig.BASE_URL
 import uz.gita.maxwayclone.app.App.Companion.instance
 import uz.gita.maxwayclone.data.sources.remote.api.AuthApi
-import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 
 object ApiClient {
+
+    const val BASE_URL = ""
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor (ChuckerInterceptor.Builder(instance).build())
         .build()
@@ -21,5 +21,5 @@ object ApiClient {
         .build()
 
     fun getProductApi(): ProductApi = retrofit.create(ProductApi::class.java)
-    fun getAuthApi(): AuthApi =
+    val authApi: AuthApi = retrofit.create(AuthApi::class.java)
 }

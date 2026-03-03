@@ -12,17 +12,21 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.EditProfileUiState
 import uz.gita.maxwayclone.R
+import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.databinding.DialogExitBinding
-import uz.gita.maxwayclone.domain.sevise_locator.ServiceLocator
 import uz.gita.maxwayclone.presentation.profile.edit_profile.EditProfileViewModel
+import uz.gita.maxwayclone.presentation.profile.edit_profile.EditProfileViewModelFactory
 
-class LogoutConfirmDialog : DialogFragment(R.layout.dialog_exit) {
+
+class DeleteConfirmDialog : DialogFragment(R.layout.dialog_exit) {
 
     private val binding by viewBinding(DialogExitBinding::bind)
+
     private val viewModel: EditProfileViewModel by viewModels {
-        ServiceLocator.editProfileVmFactory
+        EditProfileViewModelFactory(ApiClient.authApi)
     }
 
     private val tokenManager = TokenManager.getInstance()
@@ -35,44 +39,63 @@ class LogoutConfirmDialog : DialogFragment(R.layout.dialog_exit) {
             viewModel.deleteAccount(token)
         }
 
+        binding.stay.setOnClickListener {
+            dismiss()
+        }
+
+        observeState()
+    }
+
+    private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    when (event) {
-                        is EditProfileViewModel.Event.DeleteSuccess -> {
-                            tokenManager.clear()
-                            val bundle = Bundle().apply {
-                                putBoolean("DELETED", true)
-                            }
 
-                            findNavController().navigate(R.id.nav_profile, bundle,
+                viewModel.state.collect { state ->
+                    when (state) {
+
+                        EditProfileUiState.Default -> {
+                        }
+
+                        EditProfileUiState.Loading -> {
+                        }
+
+                        is EditProfileUiState.DeleteSuccess -> {
+                            tokenManager.clear()
+
+                            val bundle = Bundle().apply { putBoolean("DELETED", true) }
+
+                            findNavController().navigate(
+                                R.id.nav_profile,
+                                bundle,
                                 androidx.navigation.NavOptions.Builder()
                                     .setPopUpTo(R.id.nav_host, true)
                                     .build()
                             )
+
+                            viewModel.reset()
                             dismiss()
                         }
-                        is EditProfileViewModel.Event.Error -> {
-                            Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+
+                        is EditProfileUiState.Error -> {
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            viewModel.reset()
                         }
-                        else -> {}
+
+                        // Bu dialogga kerak emas holatlar:
+                        is EditProfileUiState.GetInfoSuccess,
+                        is EditProfileUiState.UpdateSuccess -> Unit
                     }
                 }
             }
         }
-
     }
 
     override fun onStart() {
         super.onStart()
-
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-
         dialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
-
 }

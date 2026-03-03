@@ -32,7 +32,7 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
     private val viewModel: BasketViewModel by viewModels { BasketViewModelFactory() }
     private lateinit var basketAdapter: BasketAdapter
     private lateinit var recommendedAdapter: ProductsAdapter
-    override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
+    override fun getTheme(): Int = R.style.AppBottomSheetStyleBasket
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog

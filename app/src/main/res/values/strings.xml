@@ -67,5 +67,6 @@
     <string name="check_internet">Проверьте соединение и попробуйте снова.</string>
     <string name="no_internet">Нет подключения к \nинтернету</string>
     <string name="pay">К оплате</string>
+    <string name="addBasket">Добавить</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 </resources>

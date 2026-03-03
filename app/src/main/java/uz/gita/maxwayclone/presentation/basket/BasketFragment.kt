@@ -127,6 +127,7 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
             binding.btnPay.visibility = View.GONE
             binding.ProgressBar.visibility = View.VISIBLE
         }
+
     }
 
 

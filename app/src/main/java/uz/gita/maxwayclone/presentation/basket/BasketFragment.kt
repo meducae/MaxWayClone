@@ -32,7 +32,7 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
     private val viewModel: BasketViewModel by viewModels { BasketViewModelFactory() }
     private lateinit var basketAdapter: BasketAdapter
     private lateinit var recommendedAdapter: ProductsAdapter
-    override fun getTheme(): Int = R.style.AppBottomSheetStyleBasket
+    override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -128,6 +128,10 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
         binding.recommendation.adapter = recommendedAdapter
         binding.recommendation.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         (binding.recommendation.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
+
+        // Pager effektini qo'shish (2 ta mahsulot sig'adi va sahifa kabi o'tadi)
+        binding.recommendation.onFlingListener = null
+        androidx.recyclerview.widget.PagerSnapHelper().attachToRecyclerView(binding.recommendation)
     }
 
     fun loadObserveData() {

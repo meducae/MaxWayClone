@@ -39,13 +39,14 @@ class EditProfileBottomSheetDialog(
 
         binding.birthday.setText(tokenManager.getBirthday())
         binding.userName.setText(tokenManager.getName())
-
+        binding.userPhone.text = tokenManager.getPhone()
         binding.dataPiker.setOnClickListener {
             DialogDataPicker { d, m, y ->
                 val birth = "%02d.%02d.%04d".format(d, m, y)
                 binding.birthday.setText(birth)
                 tokenManager.saveBirthday(birth)
             }.show(parentFragmentManager, "birth_date")
+
         }
 
         binding.buttonSaveEdit.setOnClickListener {

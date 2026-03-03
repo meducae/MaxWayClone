@@ -14,14 +14,16 @@ import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.CategoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
 
-@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class] , version = 5 )
+@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class , SearchEntity::class] , version = 5 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AdsDao
     abstract fun getStoriesDao() : StoriesAdsDao
     abstract fun getCategoriesDao() : CategoriesDao
     abstract fun getProductsDao() : ProductsDao
     abstract fun getBasketDao() : BasketDao
+    abstract fun searchDao(): SearchDao
     companion object{
         @Volatile
         private var instance: AppDatabase? = null
@@ -32,6 +34,7 @@ abstract class AppDatabase : RoomDatabase(){
                     AppDatabase::class.java,
                     "AppDatabase"
                 )
+
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }

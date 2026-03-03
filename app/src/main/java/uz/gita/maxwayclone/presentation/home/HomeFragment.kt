@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.LinearSmoothScroller.SNAP_TO_START
 import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,6 +60,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
+        binding.homeSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_searchFragment)
+        }
+
         adapter = AdsAdapter()
         storiesAdapter = StoriesItemAdapter()
         categoriesAdapter = CategoriesAdapter()
@@ -169,6 +175,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun observeViewModel() {
         viewModel.adsLiveData.observe(viewLifecycleOwner) { list ->
             if (list.isNullOrEmpty()) return@observe
+
             adapter.submitList(list) {
                 val middle = 10000 / 2
                 val startPosition = middle - (middle % list.size)
@@ -202,7 +209,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         stopAutoScroll()
         autoScrollJob = viewLifecycleOwner.lifecycleScope.launch {
             while (true) {
-                delay(4000) // Handler.postDelayed o'rniga
+                delay(4000)
                 val nextItem = binding.viewPagerCarousel.currentItem + 1
                 binding.viewPagerCarousel.setCurrentItem(nextItem, true)
             }
@@ -223,7 +230,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         stopAutoScroll()
         super.onPause()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

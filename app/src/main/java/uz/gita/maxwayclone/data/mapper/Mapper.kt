@@ -9,12 +9,14 @@ import uz.gita.maxwayclone.data.sources.remote.model.BranchDto
 import uz.gita.maxwayclone.data.sources.remote.model.GetBasketItemOrder
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.OrderItem
+import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 import uz.gita.maxwayclone.domain.model.branch.Branch
+import uz.gita.maxwayclone.data.sources.remote.response.home.SearchItemResponse
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
@@ -23,6 +25,7 @@ import uz.gita.maxwayclone.domain.model.home.ProductTypeModel
 import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 import kotlin.Int
+import uz.gita.maxwayclone.domain.model.home.SearchModel
 
 fun AdItemResponse.toEntity() = AdsEntity(id = id?:0, imageUrl = bannerUrl?:"")
 fun AdsEntity.toDomain() = AdsModel(id = id, imageUrl = imageUrl)
@@ -53,6 +56,24 @@ fun List<ProductModel>.toTypeModel(basketItems: List<BasketModel> = emptyList())
         }
     return result
 }
+fun SearchItemResponse.toEntity() = SearchEntity(
+    id = id ?: 0,
+    categoryId = categoryId ?: 0,
+    name = name ?: "",
+    description = description ?: "",
+    image = image ?: "",
+    cost = cost ?: 0
+)
+
+fun SearchEntity.toDomain() = SearchModel(
+    id = id ?: 0,
+    categoryId = categoryId ?: 0,
+    name = name ?: "",
+    description = description ?: "",
+    image = image ?: "",
+    cost = cost ?: 0
+)
+
 
 fun BasketEntity.toModel() = BasketModel(name = name , productId = productId , imageUrl = imageUrl , count = count , cost =  cost , description = description)
 fun ProductResponse.toModel() = RcProductModel(name = name , categoryID = categoryID , id = id , image = image , cost = cost , description = description )

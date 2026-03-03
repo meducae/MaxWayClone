@@ -1,9 +1,7 @@
 package uz.gita.maxwayclone.data.repo
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -12,9 +10,6 @@ import uz.gita.maxwayclone.app.App
 import uz.gita.maxwayclone.data.ApiClient
 import uz.gita.maxwayclone.data.mapper.toDomain
 import uz.gita.maxwayclone.data.mapper.toEntity
-import uz.gita.maxwayclone.data.mapper.toModel
-import uz.gita.maxwayclone.data.mapper.toRequest
-import uz.gita.maxwayclone.data.sources.local.TokenManager
 import uz.gita.maxwayclone.data.sources.local.room.dao.AdsDao
 import uz.gita.maxwayclone.data.sources.local.room.AppDatabase
 import uz.gita.maxwayclone.data.sources.local.room.dao.BasketDao
@@ -23,6 +18,7 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.ProductsDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
+import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
@@ -33,8 +29,9 @@ import uz.gita.maxwayclone.domain.model.home.OrderCreated
 import uz.gita.maxwayclone.domain.model.home.ProductModel
 import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
+import uz.gita.maxwayclone.domain.model.home.SearchModel
 import uz.gita.maxwayclone.domain.repository.AppRepository
-import kotlin.math.cos
+import kotlin.collections.emptyList
 
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
@@ -42,20 +39,25 @@ class AppRepositoryImpl private constructor(
     private val storiesDao: StoriesAdsDao,
     private val productsDao: ProductsDao,
     private val categoriesDao: CategoriesDao,
-    private val basketDao: BasketDao
-) : AppRepository {
+    private val basketDao: BasketDao,
+    private val searchDao: SearchDao
+): AppRepository {
 
 
     companion object {
         private var instance: AppRepositoryImpl? = null
+
+
         fun getInstance(): AppRepositoryImpl {
             if (instance == null) {
+
                 val api = ApiClient.getProductApi()
                 val db = AppDatabase.getDatabase(App.instance).getDao()
                 val storiesDao = AppDatabase.getDatabase(App.instance).getStoriesDao()
                 val productsDao = AppDatabase.getDatabase(App.instance).getProductsDao()
                 val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
                 val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
+                val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
                 instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao)
             }
             return instance!!
@@ -80,6 +82,29 @@ class AppRepositoryImpl private constructor(
             dao.updateAllAds(entities)
         } catch (e: Exception) {
 
+        }
+    }
+
+    override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
+        searchDao.searchProduct(query).map { entities ->
+          if (entities.isEmpty()) {
+                UiState.Success(emptyList<SearchModel>())
+            } else {
+                UiState.Success(entities.map { it.toDomain() })
+            }
+        }
+
+    override suspend fun searchFetchAndSave() {
+        try {
+            val response = productApi.searchProduct("")
+
+            val dataList = response.data
+
+            if (dataList != null) {
+                val entities = dataList.map { it.toEntity() }
+                searchDao.searchUpdateAll(entities)
+            }
+        } catch (e: Exception) {
         }
     }
 

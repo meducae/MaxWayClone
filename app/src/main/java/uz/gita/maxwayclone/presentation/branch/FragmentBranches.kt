@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
@@ -39,7 +40,9 @@ class FragmentBranches : Fragment(R.layout.fragment_branches) {
         }
         binding.recyclerViewBranches.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewBranches.adapter = adapter
-
+        binding.buttonBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
         viewModel.getBranches()
 
         viewLifecycleOwner.lifecycleScope.launch {

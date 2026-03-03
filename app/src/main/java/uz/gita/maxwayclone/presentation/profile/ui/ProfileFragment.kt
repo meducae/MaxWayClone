@@ -46,6 +46,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.buttonLogout.setOnClickListener {
             DeleteConfirmDialog().show(parentFragmentManager, "logout_dialog")
         }
+        binding.rootBranch.setOnClickListener {
+            findNavController().navigate(R.id.fragmentBranches)
+        }
 
         observeEvents()
 

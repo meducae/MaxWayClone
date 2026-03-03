@@ -2,6 +2,7 @@ package uz.gita.maxwayclone.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import uz.gita.maxwayclone.UiState
@@ -64,7 +65,7 @@ class AppRepositoryImpl private constructor(
                 val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
                 val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
                 val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
-                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao,searchDb,notificationDao)
+                instance = AppRepositoryImpl(api, db,notificationDao, storiesDao, productsDao, categoriesDao, basketDao,searchDb)
             }
             return instance!!
         }
@@ -85,7 +86,7 @@ class AppRepositoryImpl private constructor(
         try {
             val response = productApi.getAds()
             val entities = response.data!!.map { it.toEntity() }
-            adsDao.updateAllAds(entities)
+            dao.updateAllAds(entities)
         } catch (e: Exception) {
 
         }

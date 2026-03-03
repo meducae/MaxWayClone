@@ -58,5 +58,7 @@ class MainActivity : AppCompatActivity() {
             isAppearanceLightStatusBars = true
             isAppearanceLightNavigationBars = true
         }
+        // Edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 }

@@ -10,14 +10,16 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.CategoriesDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.ProductsDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
 import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.NotificationDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.AdsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.CategoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.StoriesEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.NotificationEntity
 
-@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class , SearchEntity::class] , version = 6 )
+@Database([AdsEntity::class , StoriesEntity::class , CategoriesEntity::class , ProductsEntity::class , BasketEntity::class , SearchEntity::class , NotificationEntity::class] , version = 7 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getDao(): AdsDao
     abstract fun getStoriesDao() : StoriesAdsDao
@@ -25,6 +27,8 @@ abstract class AppDatabase : RoomDatabase(){
     abstract fun getProductsDao() : ProductsDao
     abstract fun getBasketDao() : BasketDao
     abstract fun searchDao(): SearchDao
+    abstract fun getNotificationDao(): NotificationDao
+
     companion object{
         @Volatile
         private var instance: AppDatabase? = null

@@ -10,6 +10,7 @@ import uz.gita.maxwayclone.domain.model.home.ProductModel
 import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.SearchModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
+import uz.gita.maxwayclone.domain.model.home.NotificationModel
 
 interface AppRepository {
     fun getAds(): Flow<UiState<List<AdsModel>>>
@@ -31,4 +32,7 @@ interface AppRepository {
     fun searchProduct(query: String): Flow<UiState<List<SearchModel>>>
     suspend fun searchFetchAndSave()
 
+
+    fun getNotification(): Flow<UiState<List<NotificationModel>>>
+    suspend fun fetchAndSaveNotification()
 }

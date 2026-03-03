@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_nav_home_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
 
     <dialog
@@ -117,5 +120,9 @@
             android:name="product"
             app:argType="uz.gita.maxwayclone.domain.model.home.SearchModel" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="uz.gita.maxwayclone.presentation.home.notigication.NotificationFragment"
+        android:label="NotificationFragment" />
 
 </navigation>

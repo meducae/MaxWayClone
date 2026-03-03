@@ -10,6 +10,7 @@ import uz.gita.maxwayclone.data.sources.remote.model.GetBasketItemOrder
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.OrderItem
 import uz.gita.maxwayclone.data.sources.local.room.entity.SearchEntity
+import uz.gita.maxwayclone.data.sources.local.room.entity.NotificationEntity
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.AdsStoriesItemResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.CategoriesResponse
@@ -17,6 +18,7 @@ import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 import uz.gita.maxwayclone.domain.model.branch.Branch
 import uz.gita.maxwayclone.data.sources.remote.response.home.SearchItemResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.NotificationItemResponse
 import uz.gita.maxwayclone.domain.model.home.AdsModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
@@ -26,6 +28,7 @@ import uz.gita.maxwayclone.domain.model.home.RcProductModel
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 import kotlin.Int
 import uz.gita.maxwayclone.domain.model.home.SearchModel
+import uz.gita.maxwayclone.domain.model.home.NotificationModel
 
 fun AdItemResponse.toEntity() = AdsEntity(id = id?:0, imageUrl = bannerUrl?:"")
 fun AdsEntity.toDomain() = AdsModel(id = id, imageUrl = imageUrl)
@@ -73,6 +76,12 @@ fun SearchEntity.toDomain() = SearchModel(
     image = image ?: "",
     cost = cost ?: 0
 )
+fun NotificationItemResponse.toEntity() = NotificationEntity(id, name, message, imgURL, sendDate)
+
+
+
+
+fun NotificationEntity.toDomain() = NotificationModel(id, name, message, sendDate, imgURL)
 
 
 fun BasketEntity.toModel() = BasketModel(name = name , productId = productId , imageUrl = imageUrl , count = count , cost =  cost , description = description)

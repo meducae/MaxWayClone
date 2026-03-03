@@ -2,6 +2,7 @@ package uz.gita.maxwayclone.data.sources.remote.api
 
 import okhttp3.Response
 import retrofit2.http.Body
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -17,6 +18,7 @@ import uz.gita.maxwayclone.data.sources.remote.response.home.GeneralResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.SearchResponse
+import uz.gita.maxwayclone.data.sources.remote.response.home.NotificationResponse
 
 interface ProductApi {
     @GET("ads")
@@ -38,5 +40,8 @@ interface ProductApi {
     suspend fun createOrder(@Header("token") token: String, @Body request: CreateOrder): CreateOrderResponse
     @GET("/products_by_query")
     suspend fun searchProduct(@Query("query")query: String): SearchResponse
+    @GET("notifications")
+    suspend fun getNotifications(): Response<NotificationResponse>
+
 }
 // search, product, category, ads, recomen, basket, history

@@ -2,8 +2,6 @@ package uz.gita.maxwayclone.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import uz.gita.maxwayclone.UiState
@@ -23,10 +21,12 @@ import uz.gita.maxwayclone.data.sources.local.room.dao.StoriesAdsDao
 import uz.gita.maxwayclone.data.sources.local.room.entity.BasketEntity
 import uz.gita.maxwayclone.data.sources.local.room.entity.ProductsEntity
 import uz.gita.maxwayclone.data.sources.local.room.dao.SearchDao
+import uz.gita.maxwayclone.data.sources.local.room.dao.NotificationDao
 import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.domain.model.home.AdsModel
+import uz.gita.maxwayclone.domain.model.home.NotificationModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
 import uz.gita.maxwayclone.domain.model.home.OrderCreated
@@ -40,6 +40,7 @@ import kotlin.collections.emptyList
 class AppRepositoryImpl private constructor(
     private val productApi: ProductApi,
     private val dao: AdsDao,
+    private val notificationDao: NotificationDao,
     private val storiesDao: StoriesAdsDao,
     private val productsDao: ProductsDao,
     private val categoriesDao: CategoriesDao,
@@ -57,12 +58,13 @@ class AppRepositoryImpl private constructor(
 
                 val api = ApiClient.getProductApi()
                 val db = AppDatabase.getDatabase(App.instance).getDao()
+                val notificationDao = AppDatabase.getDatabase(App.instance).getNotificationDao()
                 val storiesDao = AppDatabase.getDatabase(App.instance).getStoriesDao()
                 val productsDao = AppDatabase.getDatabase(App.instance).getProductsDao()
                 val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
                 val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
                 val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
-                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao,searchDb)
+                instance = AppRepositoryImpl(api, db, storiesDao, productsDao, categoriesDao, basketDao,searchDb,notificationDao)
             }
             return instance!!
         }
@@ -83,7 +85,32 @@ class AppRepositoryImpl private constructor(
         try {
             val response = productApi.getAds()
             val entities = response.data!!.map { it.toEntity() }
-            dao.updateAllAds(entities)
+            adsDao.updateAllAds(entities)
+        } catch (e: Exception) {
+
+        }
+    }
+
+    override fun getNotification(): Flow<UiState<List<NotificationModel>>> =
+        notificationDao.getAllNotifications()
+            .map { entities ->
+                if (entities.isEmpty()) {
+                    UiState.Success(emptyList())
+                } else {
+                    UiState.Success(entities.map { it.toDomain() })
+                }
+            }
+
+
+    override suspend fun fetchAndSaveNotification() = withContext(Dispatchers.IO) {
+        try {
+            val response = productApi.getNotifications()
+            if (response.isSuccessful && response.body() != null) {
+                val data = response.body()!!.data
+                val entities = data.map { it.toEntity() }
+
+                notificationDao.updateAllNotifications(entities)
+            }
         } catch (e: Exception) {
 
         }

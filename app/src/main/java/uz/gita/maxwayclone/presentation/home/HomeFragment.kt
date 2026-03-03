@@ -57,6 +57,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         storiesAdapter = StoriesItemAdapter()
         categoriesAdapter = CategoriesAdapter()
         productsAdapter = ProductsAdapter()
+        binding.notification.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_notificationFragment)
+        }
+
         setupAdapter()
         observeViewModel()
         setupStoriesAdapter()
@@ -167,6 +171,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             adapter.submitList(list) {
                 val middle = 10000 / 2
                 val startPosition = middle - (middle % list.size)
+
                 if (binding.viewPagerCarousel.currentItem == 0) {
                     binding.viewPagerCarousel.setCurrentItem(startPosition, false)
                 }

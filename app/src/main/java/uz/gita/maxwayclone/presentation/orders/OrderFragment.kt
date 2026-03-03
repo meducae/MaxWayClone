@@ -15,14 +15,16 @@ class OrderFragment: Fragment(R.layout.fragment_order) {
 
     private var _binding: FragmentOrderBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter : OrdersPagerAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentOrderBinding.bind(view)
 
+        adapter = OrdersPagerAdapter(this)
 
-
-        val adapter = OrdersPagerAdapter(this)
         binding.viewPager.adapter = adapter
+        binding.viewPager.offscreenPageLimit = 1
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
@@ -30,9 +32,8 @@ class OrderFragment: Fragment(R.layout.fragment_order) {
                 else -> "Текущие заказы"
             }
         }.attach()
-        // OrderFragment.kt ichida TabLayoutMediator'dan keyin qo'shing
-        binding.tabLayout.setSelectedTabIndicatorColor(Color.WHITE) // Indikatorni oq qiladi
-        binding.tabLayout.setTabRippleColor(ColorStateList.valueOf(Color.TRANSPARENT)) // Pushti "ripple" effektini o'chiradi
+        binding.tabLayout.setSelectedTabIndicatorColor(Color.WHITE)
+        binding.tabLayout.setTabRippleColor(ColorStateList.valueOf(Color.TRANSPARENT))
 
 
         binding.viewPager.setCurrentItem(1, false)

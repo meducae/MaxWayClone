@@ -25,12 +25,15 @@ class CurrentOrdersFragment : Fragment(R.layout.fragment_currend_order) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCurrendOrderBinding.bind(view)
+        if (viewModel.ordersFlow.value.isEmpty()) {
+            binding.progressBar.isVisible = true
+            binding.emptyState.isVisible = false
+            binding.rvCurrentOrders.isVisible = false
+        }
 
         setupRecyclerView()
         observeViewModel()
 
-        // 1 minutlik interval bilan yangilashni boshlaydi
-        viewModel.startOrderTracking()
     }
 
     private fun setupRecyclerView() {
@@ -38,19 +41,25 @@ class CurrentOrdersFragment : Fragment(R.layout.fragment_currend_order) {
     }
 
     private fun observeViewModel() {
-        // Loader holati
         viewModel.loaderFlow.onEach { isLoading ->
             binding.progressBar.isVisible = isLoading
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.ordersFlow.collectLatest { orders ->
-                binding.emptyState.isVisible = orders.isEmpty()
-                binding.rvCurrentOrders.isVisible = orders.isNotEmpty()
-                adapter.submitList(orders)
+
+                binding.progressBar.isVisible = false
+
+                if (orders.isEmpty()) {
+                    binding.emptyState.isVisible = true
+                    binding.rvCurrentOrders.isVisible = false
+                } else {
+                    binding.emptyState.isVisible = false
+                    binding.rvCurrentOrders.isVisible = true
+                    adapter.submitList(orders)
+                }
             }
         }
-
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.errorFlow.collect { errorMessage ->

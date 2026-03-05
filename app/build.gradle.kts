@@ -40,7 +40,7 @@ android {
         buildConfig = true
     }
     defaultConfig{
-        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
+        buildConfigField("String" , "BASE_URL" , "\"https://newsworthy-cosmological-song.ngrok-free.dev/\"")
     }
 
 }
@@ -54,9 +54,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    // Kotlin Coroutines core
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-// Android uchun coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     val roomVersion = "2.8.4"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -78,4 +76,5 @@ dependencies {
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.android.material:material:1.13.0-alpha01")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }

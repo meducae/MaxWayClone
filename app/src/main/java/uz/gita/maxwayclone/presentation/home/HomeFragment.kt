@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.InternetMonitor
 import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.FragmentHomeBinding
 import uz.gita.maxwayclone.domain.model.home.ProductTypeModel
@@ -25,6 +27,7 @@ import uz.gita.maxwayclone.presentation.adapter.AdsAdapter
 import uz.gita.maxwayclone.presentation.adapter.CategoriesAdapter
 import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 import uz.gita.maxwayclone.presentation.adapter.StoriesItemAdapter
+import kotlin.math.log
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -37,7 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var storiesAdapter: StoriesItemAdapter
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var productsAdapter: ProductsAdapter
-
+    private lateinit var internetMonitor: InternetMonitor
     private lateinit var layoutManager: GridLayoutManager
     private var autoScrollJob: Job? = null
 
@@ -49,7 +52,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
-
+        internetMonitor = InternetMonitor(requireContext())
+        internetMonitor.registerListener { isConnected ->
+            if (!isConnected) {
+                lifecycleScope.launch (Dispatchers.Main){
+                    findNavController().navigate(R.id.action_nav_home_to_fragmentNoInternet)
+                }
+            }
+        }
+        internetMonitor.startMonitoring()
+        binding.shimmerLoading.startShimmer()
         binding.homeSearch.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_searchFragment)
         }
@@ -176,18 +188,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 startAutoScroll()
             }
+
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.storiesFlowData.collectLatest { data ->
                 storiesAdapter.submitList(data)
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.productsFlowData.collectLatest { productsData ->
                 productsAdapter.submitList(productsData)
+                delay(500)
+                binding.shimmerLoading.stopShimmer()
+                binding.shimmerLoading.visibility = View.GONE
                 binding.menuHome.visibility = View.VISIBLE
-                binding.progressBar.visibility  = View.GONE
             }
         }
 
@@ -216,8 +230,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onResume() {
         super.onResume()
-        Log.d("TTT", "onResume: ")
-//        if (adapter.itemCount > 0) startAutoScroll()
     }
 
     override fun onPause() {
@@ -231,6 +243,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.storiesCircle.adapter = null
         binding.categories.adapter = null
         binding.products.adapter = null
+        internetMonitor.stopMonitoring()
         _binding = null
     }
 }

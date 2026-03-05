@@ -31,6 +31,8 @@ import uz.gita.maxwayclone.databinding.FragmentBasketBinding
 import uz.gita.maxwayclone.presentation.adapter.BasketAdapter
 import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 
+
+
 class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
     private val binding by viewBinding(FragmentBasketBinding::bind)
     private val viewModel: BasketViewModel by viewModels { BasketViewModelFactory() }

@@ -1,12 +1,12 @@
 package uz.gita.maxwayclone.presentation.adapter
 
-import android.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.ItemStoriesBinding
 import uz.gita.maxwayclone.domain.model.home.StoriesModel
 
@@ -29,7 +29,7 @@ class StoriesItemAdapter : ListAdapter<StoriesModel,StoriesItemAdapter.StoriesVH
                 Glide.with(binding.imageStories)
                     .load(imageUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.progress_indeterminate_horizontal)
+                    .placeholder(R.drawable.loading)
                     .into(binding.imageStories)
             }
         }

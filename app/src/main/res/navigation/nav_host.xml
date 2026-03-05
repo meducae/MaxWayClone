@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_host"
-    app:startDestination="@id/nav_home">
+    app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/nav_home"
         android:name="uz.gita.maxwayclone.presentation.home.HomeFragment"
@@ -137,5 +137,15 @@
         android:id="@+id/notificationFragment"
         android:name="uz.gita.maxwayclone.presentation.home.notification.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="uz.gita.maxwayclone.presentation.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

@@ -7,14 +7,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:background="#fff">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/home_search"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_margin="16dp"
             android:src="@drawable/search"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -23,8 +25,8 @@
 
         <ImageView
             android:id="@+id/notification"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_margin="16dp"
             android:src="@drawable/notification"
             app:layout_constraintBottom_toBottomOf="parent"

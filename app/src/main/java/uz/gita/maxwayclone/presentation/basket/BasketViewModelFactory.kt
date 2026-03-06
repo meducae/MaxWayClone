@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import uz.gita.maxwayclone.data.repo.AppRepositoryImpl
 import uz.gita.maxwayclone.domain.usecase.AddBasketItemUseCase
+import uz.gita.maxwayclone.domain.usecase.GetBasketItemCountUseCase
 import uz.gita.maxwayclone.domain.usecase.impl.AddBasketItemImpl
 import uz.gita.maxwayclone.domain.usecase.impl.ClearBasketUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.impl.CreateOrderUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.impl.DeleteBasketItemUseCaseImpl
+import uz.gita.maxwayclone.domain.usecase.impl.GetBasketItemCountImpl
 import uz.gita.maxwayclone.domain.usecase.impl.GetBasketItemsImpl
 import uz.gita.maxwayclone.domain.usecase.impl.GetBasketTotalPriceUseCaseImpl
 import uz.gita.maxwayclone.domain.usecase.impl.GetRecommendedProductsUseCaseImpl
@@ -25,6 +27,7 @@ class BasketViewModelFactory : ViewModelProvider.Factory {
         val addBasketItemUseCase = AddBasketItemImpl(repository)
         val plusBasketItemUseCase = PlusToBasketUseCaseImpl(repository)
         val createOrderUseCase = CreateOrderUseCaseImpl(repository)
+        val getBasketItemCountUseCase = GetBasketItemCountImpl(repository)
         return BasketViewModelImpl(
             getBasketItemsUseCase,
             deleteBasketItemUseCase,
@@ -33,7 +36,8 @@ class BasketViewModelFactory : ViewModelProvider.Factory {
             getRecommendedUseCase,
             addBasketItemUseCase,
             plusBasketItemUseCase,
-            createOrderUseCase
+            createOrderUseCase,
+            getBasketItemCountUseCase
         ) as T
     }
 }

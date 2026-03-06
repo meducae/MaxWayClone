@@ -1,12 +1,8 @@
 package uz.gita.maxwayclone.presentation.basket
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,6 +22,7 @@ import uz.gita.maxwayclone.domain.usecase.AddBasketItemUseCase
 import uz.gita.maxwayclone.domain.usecase.ClearBasketUseCase
 import uz.gita.maxwayclone.domain.usecase.CreateOrderUseCase
 import uz.gita.maxwayclone.domain.usecase.DeleteBasketItemUseCase
+import uz.gita.maxwayclone.domain.usecase.GetBasketItemCountUseCase
 import uz.gita.maxwayclone.domain.usecase.GetBasketItemsUseCase
 import uz.gita.maxwayclone.domain.usecase.GetBasketTotalPriceUseCase
 import uz.gita.maxwayclone.domain.usecase.GetRecommendedProductsUseCase
@@ -39,12 +36,13 @@ class BasketViewModelImpl(
     private val getRecommendedUseCase: GetRecommendedProductsUseCase,
     private val addBasketItemUseCase: AddBasketItemUseCase,
     private val plusToBasketUseCase: PlusToBasketUseCase,
-    private val createOrderUseCase: CreateOrderUseCase
+    private val createOrderUseCase: CreateOrderUseCase,
+    private val getBasketItemCountUseCase: GetBasketItemCountUseCase
 ) : ViewModel(), BasketViewModel {
     override val showBasketItems = MutableStateFlow<List<BasketModel>>(emptyList())
     override val showPrice = MutableStateFlow<String>("0")
     private val _rawRecommended = MutableStateFlow<List<RcProductModel>>(emptyList())
-
+    override val getBasketItemCount = MutableStateFlow<Int>(0)
 
     private val _moveToRegister = MutableSharedFlow<Unit>()
     override val moveToRegister: SharedFlow<Unit>
@@ -102,6 +100,12 @@ class BasketViewModelImpl(
                 showPrice.value = totalPrice.formatPrice()
             }
         }
+
+        viewModelScope.launch(Dispatchers.IO){
+            getBasketItemCountUseCase().collect { count ->
+                getBasketItemCount.value = count
+            }
+        }
     }
 
     override fun plusBasket(productId: Int) {
@@ -123,6 +127,7 @@ class BasketViewModelImpl(
                         is UiState.Error -> {
                             _showResult.emit(value = state.message)
                         }
+
                         is UiState.Success -> _showResult.emit(value = state.data.message)
                         is UiState.Loading -> {}
                     }

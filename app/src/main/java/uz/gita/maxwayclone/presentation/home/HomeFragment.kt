@@ -66,6 +66,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_nav_home_to_searchFragment)
         }
 
+
         adapter = AdsAdapter()
         storiesAdapter = StoriesItemAdapter()
         categoriesAdapter = CategoriesAdapter()

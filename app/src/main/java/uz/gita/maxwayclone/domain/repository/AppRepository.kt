@@ -18,25 +18,23 @@ interface AppRepository {
     suspend fun fetchAndSaveAds()
     fun getStories(): Flow<UiState<List<StoriesModel>>>
     suspend fun fetchAndSaveStories()
-    fun getProducts() : Flow<UiState<List<ProductModel>>>
+    fun getProducts(): Flow<UiState<List<ProductModel>>>
     suspend fun fetchAndSaveProducts()
-    fun getCategories() : Flow<UiState<List<CategoryModel>>>
+    fun getCategories(): Flow<UiState<List<CategoryModel>>>
     suspend fun fetchAndSaveCategories()
     suspend fun addToBasket(productModel: ProductModel)
     suspend fun plusToBasket(productId: Int)
-    suspend fun decrementBasketItem(id : Int , currentCount : Int)
+    suspend fun decrementBasketItem(id: Int, currentCount: Int)
     fun getBasketItems(): Flow<UiState<List<BasketModel>>>
     suspend fun clearBasket()
-    fun getBasketTotalPrice() : Flow<Long>
-    suspend fun getRecommendedProducts() : UiState<List<RcProductModel>>
-    fun createOrder() : Flow<UiState<OrderCreated>>
+    fun getBasketTotalPrice(): Flow<Long>
+    suspend fun getRecommendedProducts(): UiState<List<RcProductModel>>
+    fun createOrder(): Flow<UiState<OrderCreated>>
     fun searchProduct(query: String): Flow<UiState<List<SearchModel>>>
     suspend fun searchFetchAndSave()
-
-
+    fun getBasketItemCount(): Flow<Int>
     fun getNotification(): Flow<UiState<List<NotificationModel>>>
     suspend fun fetchAndSaveNotification()
-
 
 
     suspend fun getMyOrders(): Result<List<MyOrdersUIData>>

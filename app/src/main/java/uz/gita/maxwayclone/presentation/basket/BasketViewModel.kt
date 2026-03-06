@@ -14,6 +14,7 @@ interface BasketViewModel {
     val recommendedFlow: StateFlow<List<ProductTypeModel>>
     val moveToRegister: SharedFlow<Unit>
     val showResult : SharedFlow<String>
+    val getBasketItemCount : StateFlow<Int>
     fun loadBasketItems()
     fun plusBasket(productId: Int)
     fun payOrder()

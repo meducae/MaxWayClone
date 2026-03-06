@@ -31,7 +31,7 @@ abstract class AppDatabase : RoomDatabase(){
 
     companion object{
         @Volatile
-        private var instance: AppDatabase? = null
+        var instance: AppDatabase? = null
         fun getDatabase(context: Context): AppDatabase {
             return instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
@@ -39,7 +39,6 @@ abstract class AppDatabase : RoomDatabase(){
                     AppDatabase::class.java,
                     "AppDatabase"
                 )
-
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }

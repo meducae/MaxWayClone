@@ -13,6 +13,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -35,7 +36,7 @@ import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 
 class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
     private val binding by viewBinding(FragmentBasketBinding::bind)
-    private val viewModel: BasketViewModel by viewModels { BasketViewModelFactory() }
+    private val viewModel: BasketViewModel by activityViewModels()
     private lateinit var basketAdapter: BasketAdapter
     private lateinit var recommendedAdapter: ProductsAdapter
     override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
@@ -129,6 +130,7 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
             binding.btnPay.visibility = View.GONE
             binding.ProgressBar.visibility = View.VISIBLE
         }
+
 
     }
 

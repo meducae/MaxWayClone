@@ -17,13 +17,17 @@ interface BasketDao {
     fun getAllBasketItems(): Flow<List<BasketEntity>>
 
     @Query("Select productId From basket_table")
-    fun getBasketItemId() : List<Int>
+    fun getBasketItemId(): List<Int>
 
     @Query("Select productId , count From basket_table")
-    fun getBasketOrder() : List<GetBasketItemOrder>
+    fun getBasketOrder(): List<GetBasketItemOrder>
 
     @Query("SELECT COUNT(*) FROM basket_table")
-    fun getBasketSize() : Int
+    fun getBasketItemCount(): Flow<Int>
+
+
+    @Query("SELECT COUNT(*) FROM basket_table")
+    fun getBasketSize(): Int
 
     @Query("SELECT * FROM basket_table WHERE productId = :id")
     suspend fun getBasketItemById(id: Int): BasketEntity?
@@ -41,7 +45,7 @@ interface BasketDao {
     suspend fun deleteItem(id: Int)
 
     @Query("SELECT SUM(cost*count) FROM basket_table")
-    fun getTotalPrice() : Flow<Long>
+    fun getTotalPrice(): Flow<Long>
 
     @Query("DELETE from basket_table")
     suspend fun deleteBasket()

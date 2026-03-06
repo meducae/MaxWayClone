@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.EditProfileUiState
 import uz.gita.maxwayclone.data.sources.remote.request.register.UpdateRequest
+import uz.gita.maxwayclone.domain.usecase.ClearBasketUseCase
 import uz.gita.maxwayclone.domain.usecase.auth.DeleteAccountUseCase
 import uz.gita.maxwayclone.domain.usecase.auth.GetUserInfoUseCase
 import uz.gita.maxwayclone.domain.usecase.auth.UpdateUserUseCase
@@ -14,7 +15,8 @@ import uz.gita.maxwayclone.domain.usecase.auth.UpdateUserUseCase
 class EditProfileViewModel(
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val updateUserUseCase: UpdateUserUseCase
+    private val updateUserUseCase: UpdateUserUseCase,
+    private val clearBasketUseCase: ClearBasketUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<EditProfileUiState>(EditProfileUiState.Default)
@@ -29,13 +31,12 @@ class EditProfileViewModel(
             _state.value = EditProfileUiState.Error("Регистрация не найдена")
             return
         }
-
         viewModelScope.launch {
             _state.value = EditProfileUiState.Loading
-
             try {
                 deleteAccountUseCase(token).collect { result ->
                     result.onSuccess { response ->
+                        clearBasketUseCase.invoke()
                         _state.value = EditProfileUiState.DeleteSuccess(response)
                     }.onFailure { e ->
                         _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")

@@ -58,7 +58,6 @@ class AuthRepositoryImpl(
     override fun verify(request: VerifyRequest): Flow<Result<ResponseVerify>> = flow {
         try {
             val response = api.verifyUser(request)
-
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
@@ -127,7 +126,6 @@ class AuthRepositoryImpl(
     override fun delete(token: String): Flow<Result<ResponseDeleteAccount>> = flow {
         try {
             val response = api.deleteAccount(token)
-
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {

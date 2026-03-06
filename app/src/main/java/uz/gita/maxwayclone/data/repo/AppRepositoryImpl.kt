@@ -3,6 +3,7 @@ package uz.gita.maxwayclone.data.repo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import uz.gita.maxwayclone.UiState
@@ -49,25 +50,24 @@ class AppRepositoryImpl private constructor(
     private val categoriesDao: CategoriesDao,
     private val basketDao: BasketDao,
     private val searchDao: SearchDao
-): AppRepository {
+) : AppRepository {
 
 
     companion object {
         private var instance: AppRepositoryImpl? = null
-
+        private val appDatabase = AppDatabase.getDatabase(App.instance)
 
         fun getInstance(): AppRepositoryImpl {
             if (instance == null) {
-
                 val api = ApiClient.getProductApi()
-                val db = AppDatabase.getDatabase(App.instance).getDao()
-                val notificationDao = AppDatabase.getDatabase(App.instance).getNotificationDao()
-                val storiesDao = AppDatabase.getDatabase(App.instance).getStoriesDao()
-                val productsDao = AppDatabase.getDatabase(App.instance).getProductsDao()
-                val categoriesDao = AppDatabase.getDatabase(App.instance).getCategoriesDao()
-                val basketDao = AppDatabase.getDatabase(App.instance).getBasketDao()
-                val searchDb = AppDatabase.getDatabase(App.instance).searchDao()
-                instance = AppRepositoryImpl(api, db,notificationDao, storiesDao, productsDao, categoriesDao, basketDao,searchDb)
+                val db = appDatabase.getDao()
+                val notificationDao = appDatabase.getNotificationDao()
+                val storiesDao = appDatabase.getStoriesDao()
+                val productsDao = appDatabase.getProductsDao()
+                val categoriesDao = appDatabase.getCategoriesDao()
+                val basketDao = appDatabase.getBasketDao()
+                val searchDb = appDatabase.searchDao()
+                instance = AppRepositoryImpl(api, db, notificationDao, storiesDao, productsDao, categoriesDao, basketDao, searchDb)
             }
             return instance!!
         }
@@ -76,11 +76,8 @@ class AppRepositoryImpl private constructor(
     override fun getAds(): Flow<UiState<List<AdsModel>>> =
         dao.getAllAds()
             .map { entities ->
-                if (entities.isEmpty()) {
-                    UiState.Success(emptyList())
-                } else {
-                    UiState.Success(entities.map { it.toDomain() })
-                }
+                UiState.Success(entities.map { it.toDomain() })
+
             }
 
 
@@ -97,11 +94,7 @@ class AppRepositoryImpl private constructor(
     override fun getNotification(): Flow<UiState<List<NotificationModel>>> =
         notificationDao.getAllNotifications()
             .map { entities ->
-                if (entities.isEmpty()) {
-                    UiState.Success(emptyList())
-                } else {
-                    UiState.Success(entities.map { it.toDomain() })
-                }
+                UiState.Success(entities.map { it.toDomain() })
             }
 
 
@@ -120,26 +113,22 @@ class AppRepositoryImpl private constructor(
     }
 
     override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> = withContext(Dispatchers.IO) {
-                try {
-                    val token = TokenManager.getToken()
-                    val response = productApi.getAllOrders(token)
-                    val uiDataList = response.data.map { it.toUIData() }
-                    Result.success(uiDataList)
-                } catch (e: Exception) {
-                    Result.failure(e)
-                }
+        try {
+            val token = TokenManager.getToken()
+            val response = productApi.getAllOrders(token)
+            val uiDataList = response.data.map { it.toUIData() }
+            Result.success(uiDataList)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
-          if (entities.isEmpty()) {
-                UiState.Success(emptyList<SearchModel>())
-            } else {
-                UiState.Success(entities.map { it.toDomain() })
-            }
+            UiState.Success(entities.map { it.toDomain() })
         }
 
-    override suspend fun searchFetchAndSave() {
+    override suspend fun searchFetchAndSave() = withContext(Dispatchers.IO) {
         try {
             val response = productApi.searchProduct("")
             val dataList = response.data
@@ -151,20 +140,20 @@ class AppRepositoryImpl private constructor(
         }
     }
 
+    override fun getBasketItemCount(): Flow<Int> {
+        return basketDao.getBasketItemCount()
+    }
+
     override fun getStories(): Flow<UiState<List<StoriesModel>>> =
         storiesDao.getAllAds().map { entities ->
-            if (entities.isEmpty()) {
-                UiState.Success(emptyList())
-            } else {
-                UiState.Success(entities.map { it.toDomain() })
-            }
+            UiState.Success(entities.map { it.toDomain() })
         }
 
 
-    override suspend fun fetchAndSaveStories() {
+    override suspend fun fetchAndSaveStories() = withContext(Dispatchers.IO) {
         try {
             val response = productApi.getStories()
-            val entities = response.data.map { it.toEntity() } ?: emptyList()
+            val entities = response.data.map { it.toEntity() }
             storiesDao.updateAllAds(entities)
         } catch (e: Exception) {
         }
@@ -180,7 +169,7 @@ class AppRepositoryImpl private constructor(
         }
     }
 
-    override suspend fun fetchAndSaveProducts() {
+    override suspend fun fetchAndSaveProducts() = withContext(Dispatchers.IO) {
         try {
             val response = productApi.getProducts()
             val entities = mutableListOf<ProductsEntity>()
@@ -207,14 +196,10 @@ class AppRepositoryImpl private constructor(
     }
 
     override fun getCategories(): Flow<UiState<List<CategoryModel>>> = categoriesDao.getAllCategories().map { entities ->
-        if (entities.isEmpty()) {
-            UiState.Success(emptyList())
-        } else {
-            UiState.Success(entities.map { it.toModel() })
-        }
+        UiState.Success(entities.map { it.toModel() })
     }
 
-    override suspend fun fetchAndSaveCategories() {
+    override suspend fun fetchAndSaveCategories() = withContext(Dispatchers.IO) {
         try {
             val response = productApi.getCategories()
             val entity = response.data.map { it.toEntity() }
@@ -274,8 +259,8 @@ class AppRepositoryImpl private constructor(
         return basketDao.getTotalPrice()
     }
 
-    override suspend fun getRecommendedProducts(): UiState<List<RcProductModel>> {
-        return try {
+    override suspend fun getRecommendedProducts(): UiState<List<RcProductModel>> = withContext(Dispatchers.IO) {
+        try {
             val idList = basketDao.getBasketItemId()
             val response = productApi.getRecommended(RecommendedRequest(ids = idList))
             UiState.Success(response.data.map { it.toModel() })
@@ -295,13 +280,13 @@ class AppRepositoryImpl private constructor(
                 val response = productApi.createOrder(token = token, request = requestList)
                 emit(UiState.Success(OrderCreated(response.message)))
                 basketDao.deleteBasket()
-            }else{
+            } else {
                 emit(UiState.Success(OrderCreated("Savat bo'sh!")))
             }
         } catch (e: Exception) {
             emit(UiState.Error("Buyurtma yaratishda xatolik!"))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
 
 

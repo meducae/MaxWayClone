@@ -1,4 +1,4 @@
-package uz.gita.maxwayclone.presentation.home.notigication
+package uz.gita.maxwayclone.presentation.home.notification
 
 import android.os.Bundle
 import android.view.View
@@ -45,11 +45,19 @@ class NotificationFragment : Fragment(R.layout.fragment_notification) {
         }
 
         viewModel.loadingLiveData.observe(viewLifecycleOwner) { isLoading ->
-            binding.itemProgress.visibility = if (isLoading) View.VISIBLE else View.GONE
-
+            if (isLoading) {
+                binding.shimmerView.visibility = View.VISIBLE
+                binding.shimmerView.startShimmer()
+                binding.recycle.visibility = View.GONE
+            } else {
+                binding.shimmerView.stopShimmer()
+                binding.shimmerView.visibility = View.GONE
+                binding.recycle.visibility = View.VISIBLE
+            }
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) { message ->
+
 
         }
     }

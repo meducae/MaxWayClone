@@ -4,15 +4,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ProgressBar
-        android:id="@+id/itemProgress"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <ImageView
         android:layout_width="25dp"
@@ -34,11 +26,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/arrowLeft"
         app:layout_constraintBottom_toBottomOf="@id/arrowLeft"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/arrowLeft"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include layout="@layout/shimmer_notification" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/arrowLeft"
         app:layout_constraintBottom_toBottomOf="parent"/>

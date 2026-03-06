@@ -97,11 +97,7 @@ class AppRepositoryImpl private constructor(
     override fun getNotification(): Flow<UiState<List<NotificationModel>>> =
         notificationDao.getAllNotifications()
             .map { entities ->
-                if (entities.isEmpty()) {
-                    UiState.Success(emptyList())
-                } else {
-                    UiState.Success(entities.map { it.toDomain() })
-                }
+                UiState.Success(entities.map { it.toDomain() })
             }
 
 
@@ -132,11 +128,7 @@ class AppRepositoryImpl private constructor(
 
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
-          if (entities.isEmpty()) {
-                UiState.Success(emptyList<SearchModel>())
-            } else {
-                UiState.Success(entities.map { it.toDomain() })
-            }
+            UiState.Success(entities.map { it.toDomain() })
         }
 
     override suspend fun searchFetchAndSave() {

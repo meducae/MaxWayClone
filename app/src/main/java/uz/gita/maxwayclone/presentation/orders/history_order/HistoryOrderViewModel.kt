@@ -9,11 +9,14 @@ import uz.gita.maxwayclone.domain.usecase.OrderUseCase
 
 class HistoryOrderViewModel (private val useCase: OrderUseCase): ViewModel(){
     val historyOrdersFlow = MutableStateFlow<List<MyOrdersUIData>>(emptyList())
+    val loadingFlow = MutableStateFlow(false)
+    val errorFlow = MutableStateFlow<String?>(null)
 
 
 
     fun loadHistory() {
         viewModelScope.launch {
+            loadingFlow.emit(true)
             val result = useCase.getMyOrders()
             result.onSuccess { allOrders ->
                 val currentTime = System.currentTimeMillis()
@@ -23,6 +26,13 @@ class HistoryOrderViewModel (private val useCase: OrderUseCase): ViewModel(){
                     diffInMinutes >= 15
                 }
                 historyOrdersFlow.emit(historyOrders)
+                loadingFlow.emit(false)
+
             }
+            result.onFailure {
+                errorFlow.emit(it.message)
+                loadingFlow.emit(false)
+            }
+
         }
     }}

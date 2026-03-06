@@ -64,25 +64,26 @@ class CurrentOrdersViewModel(private val orderUseCase: OrderUseCase) : ViewModel
     }
     fun loadCurrentOrders() {
         viewModelScope.launch {
-            if (ordersFlow.value.isEmpty()) loaderFlow.emit(true)
+            if (ordersFlow.value.isEmpty()) {
+                loaderFlow.emit(true)
+            }
 
             val result = orderUseCase.getMyOrders()
-            loaderFlow.emit(false)
 
             result.onSuccess { allOrders ->
                 val currentOrders = allOrders.map { order ->
-                    order.copy(
-                        currentStage = calculateStage(order.createTime)
-                    )
+                    order.copy(currentStage = calculateStage(order.createTime))
                 }.filter { it.currentStage < 4 }
 
                 ordersFlow.emit(currentOrders)
+
+                loaderFlow.emit(false)
             }.onFailure {
+                loaderFlow.emit(false)
                 errorFlow.emit(it.message ?: "Xatolik yuz berdi")
             }
         }
-    }
-    override fun onCleared() {
+    }    override fun onCleared() {
         super.onCleared()
         pollingJob?.cancel()
     }

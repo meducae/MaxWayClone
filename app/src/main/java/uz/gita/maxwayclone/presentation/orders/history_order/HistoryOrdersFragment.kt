@@ -29,6 +29,20 @@ class HistoryOrdersFragment : Fragment(R.layout.fragment_history){
                 adapter.submitList(it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loadingFlow.collectLatest { isLoading->
+                if (isLoading){
+                    binding.shimmerHistory.startShimmer()
+                    binding.shimmerHistory.visibility = View.VISIBLE
+                    binding.recycle.visibility = View.GONE
+                }else{
+                    binding.shimmerHistory.stopShimmer()
+                    binding.shimmerHistory.visibility = View.GONE
+                    binding.recycle.visibility = View.VISIBLE
+                }
+            }
+        }
+
     }
 
     override fun onResume() {

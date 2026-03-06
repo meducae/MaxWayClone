@@ -1,4 +1,4 @@
-package uz.gita.maxwayclone.presentation.home.notigication
+package uz.gita.maxwayclone.presentation.home.notification
 
 import androidx.lifecycle.LiveData
 import uz.gita.maxwayclone.domain.model.home.NotificationModel

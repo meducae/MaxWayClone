@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="uz.gita.maxwayclone.presentation.home.notigication.NotificationFragment"
+        android:name="uz.gita.maxwayclone.presentation.home.notification.NotificationFragment"
         android:label="NotificationFragment" />
 
 </navigation>

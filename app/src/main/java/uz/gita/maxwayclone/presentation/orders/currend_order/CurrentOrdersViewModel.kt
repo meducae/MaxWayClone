@@ -22,7 +22,6 @@ class CurrentOrdersViewModel(private val orderUseCase: OrderUseCase) : ViewModel
 
     init {
         startOrderTracking()
-        loadCurrentOrders()
     }
     private fun calculateStage(createTime: Long): Int {
         val diffInMinutes = (System.currentTimeMillis() - createTime) / 60_000

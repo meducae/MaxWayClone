@@ -147,5 +147,15 @@
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="uz.gita.maxwayclone.presentation.orders.detail.DetailOrderFragment"
+        android:label="OrderDetailFragment"
+        tools:layout="@layout/fragment_order_detail">
+
+        <argument
+            android:name="order_data"
+            app:argType="uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData" />
+    </fragment>
 
 </navigation>

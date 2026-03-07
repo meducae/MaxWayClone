@@ -8,16 +8,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import uz.gita.maxwayclone.databinding.ItemMyOrderBinding
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 
-class CurrentOrdersAdapter : ListAdapter<MyOrdersUIData, CurrentOrdersAdapter.ViewHolder>(DiffCallback) {
+class CurrentOrdersAdapter (private val onItemClick: (UserOrdersUIData) -> Unit): ListAdapter<UserOrdersUIData, CurrentOrdersAdapter.ViewHolder>(DiffCallback) {
 
 
     inner class ViewHolder(private val binding: ItemMyOrderBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: MyOrdersUIData) {
+        fun bind(data: UserOrdersUIData) {
             binding.apply {
                 statusZakaz.text = "Статус заказа №${data.orderNumber}"
+                root.setOnClickListener {
+                    onItemClick(data)
+                }
                 tvDesc.text = data.statusText
 
                 updateStepper(data.currentStage)
@@ -63,12 +66,12 @@ class CurrentOrdersAdapter : ListAdapter<MyOrdersUIData, CurrentOrdersAdapter.Vi
         holder.bind(getItem(position))
     }
 
-    object DiffCallback : DiffUtil.ItemCallback<MyOrdersUIData>() {
-        override fun areItemsTheSame(oldItem: MyOrdersUIData, newItem: MyOrdersUIData): Boolean {
+    object DiffCallback : DiffUtil.ItemCallback<UserOrdersUIData>() {
+        override fun areItemsTheSame(oldItem: UserOrdersUIData, newItem: UserOrdersUIData): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: MyOrdersUIData, newItem: MyOrdersUIData): Boolean {
+        override fun areContentsTheSame(oldItem: UserOrdersUIData, newItem: UserOrdersUIData): Boolean {
             return oldItem == newItem
         }
     }

@@ -7,11 +7,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 import uz.gita.maxwayclone.domain.usecase.OrderUseCase
 
 class CurrentOrdersViewModel(private val orderUseCase: OrderUseCase) : ViewModel() {
-    val ordersFlow = MutableStateFlow<List<MyOrdersUIData>>(emptyList())
+    val ordersFlow = MutableStateFlow<List<UserOrdersUIData>>(emptyList())
     val loaderFlow = MutableStateFlow(false)
     val errorFlow = MutableSharedFlow<String>()
 

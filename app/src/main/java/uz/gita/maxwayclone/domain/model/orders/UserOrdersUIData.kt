@@ -4,7 +4,7 @@ import uz.gita.maxwayclone.data.sources.remote.response.order.my_order.ProductIt
 import java.io.Serializable
 
 
-data class MyOrdersUIData(
+data class UserOrdersUIData(
     val address: String,
     val createTime: Long,
     val id: Int,

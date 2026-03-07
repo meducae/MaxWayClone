@@ -17,7 +17,7 @@ import uz.gita.maxwayclone.data.sources.remote.response.home.ProductResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.ProductsResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.SearchResponse
 import uz.gita.maxwayclone.data.sources.remote.response.home.NotificationResponse
-import uz.gita.maxwayclone.data.sources.remote.response.order.my_order.MyOrdersResponse
+import uz.gita.maxwayclone.data.sources.remote.response.order.my_order.UserOrdersResponse
 
 interface ProductApi {
     @GET("ads")
@@ -43,11 +43,8 @@ interface ProductApi {
 
     @GET("notifications")
     suspend fun getNotifications(): Response<NotificationResponse>
-
-
-
     @GET("my_orders")
-    suspend fun getAllOrders(@Header("token") token:String): MyOrdersResponse
+    suspend fun getAllOrders(@Header("token") token:String): UserOrdersResponse
 
 }
 // search, product, category, ads, recomen, basket, history

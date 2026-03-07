@@ -79,4 +79,5 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.android.material:material:1.13.0-alpha01")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }

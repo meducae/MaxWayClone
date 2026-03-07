@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 import uz.gita.maxwayclone.domain.usecase.OrderUseCase
 
 class HistoryOrderViewModel (private val useCase: OrderUseCase): ViewModel(){
-    val historyOrdersFlow = MutableStateFlow<List<MyOrdersUIData>>(emptyList())
+    val historyOrdersFlow = MutableStateFlow<List<UserOrdersUIData>>(emptyList())
 
 
 

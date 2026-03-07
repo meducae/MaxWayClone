@@ -1,6 +1,6 @@
 package uz.gita.maxwayclone.domain.usecase.impl
 
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 import uz.gita.maxwayclone.domain.repository.AppRepository
 import uz.gita.maxwayclone.domain.usecase.OrderUseCase
 
@@ -10,7 +10,7 @@ class OrderUseCaseImpl(
 
 
 
-    override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> {
+    override suspend fun getMyOrders(): Result<List<UserOrdersUIData>> {
         return repository.getMyOrders()
     }
 

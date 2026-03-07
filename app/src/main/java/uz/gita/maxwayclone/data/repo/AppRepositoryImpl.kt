@@ -28,7 +28,7 @@ import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 import uz.gita.maxwayclone.data.sources.remote.request.CreateOrder
 import uz.gita.maxwayclone.data.sources.remote.request.RecommendedRequest
 import uz.gita.maxwayclone.domain.model.home.AdsModel
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 import uz.gita.maxwayclone.domain.model.home.NotificationModel
 import uz.gita.maxwayclone.domain.model.home.BasketModel
 import uz.gita.maxwayclone.domain.model.home.CategoryModel
@@ -119,7 +119,7 @@ class AppRepositoryImpl private constructor(
         }
     }
 
-    override suspend fun getMyOrders(): Result<List<MyOrdersUIData>> = withContext(Dispatchers.IO) {
+    override suspend fun getMyOrders(): Result<List<UserOrdersUIData>> = withContext(Dispatchers.IO) {
                 try {
                     val token = TokenManager.getToken()
                     val response = productApi.getAllOrders(token)

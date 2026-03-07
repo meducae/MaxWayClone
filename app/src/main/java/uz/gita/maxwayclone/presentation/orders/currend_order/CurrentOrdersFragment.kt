@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,7 +21,12 @@ class CurrentOrdersFragment : Fragment(R.layout.fragment_currend_order) {
     private val binding get() = _binding!!
 
     private val viewModel: CurrentOrdersViewModel by viewModels { CurrentOrdersViewModelFactory() }
-    private val adapter = CurrentOrdersAdapter()
+    private val adapter = CurrentOrdersAdapter { order ->
+        val bundle = Bundle().apply {
+            putSerializable("order_data", order)
+        }
+        findNavController().navigate(R.id.orderDetailFragment, bundle)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

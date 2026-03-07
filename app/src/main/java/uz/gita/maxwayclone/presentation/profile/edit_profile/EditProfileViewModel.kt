@@ -39,11 +39,11 @@ class EditProfileViewModel(
                         clearBasketUseCase.invoke()
                         _state.value = EditProfileUiState.DeleteSuccess(response)
                     }.onFailure { e ->
-                        _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                        _state.value = EditProfileUiState.Error("не удалось удалить")
                     }
                 }
             } catch (e: Exception) {
-                _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                _state.value = EditProfileUiState.Error("не удалось удалить")
             }
         }
     }
@@ -62,11 +62,11 @@ class EditProfileViewModel(
                     result.onSuccess { response ->
                         _state.value = EditProfileUiState.GetInfoSuccess(response)
                     }.onFailure { e ->
-                        _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                        _state.value = EditProfileUiState.Error("не подключен к интернету")
                     }
                 }
             } catch (e: Exception) {
-                _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                _state.value = EditProfileUiState.Error("не подключен к интернету")
             }
         }
     }
@@ -84,12 +84,12 @@ class EditProfileViewModel(
                 updateUserUseCase(token, request).collect { result ->
                     result.onSuccess { response ->
                         _state.value = EditProfileUiState.UpdateSuccess(response)
-                    }.onFailure { e ->
-                        _state.value = EditProfileUiState.Error(e.message ?: "Update error")
+                    }.onFailure {
+                        _state.value = EditProfileUiState.Error("Обновление не удалось.")
                     }
                 }
             } catch (e: Exception) {
-                _state.value = EditProfileUiState.Error(e.message ?: "Update error")
+                _state.value = EditProfileUiState.Error("Обновление не удалось.")
             }
         }
     }

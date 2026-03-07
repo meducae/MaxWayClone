@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F8F8">
+    android:background="@color/root_color">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
         android:clipToPadding="false"
         android:paddingVertical="8dp"
         android:visibility="gone"
+        android:background="@color/root_color"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_my_order" />
 
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@color/root_color"
         android:orientation="vertical"
         android:visibility="gone">
 

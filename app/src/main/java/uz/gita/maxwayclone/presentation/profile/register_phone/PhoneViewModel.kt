@@ -23,21 +23,16 @@ class PhoneViewModel(private val registerUseCase: RegisterUseCase) : ViewModel()
                     result.onSuccess { data ->
                         _state.value = RegisterUiState.Success(data)
                     }.onFailure { e ->
-                        _state.value = RegisterUiState.Error(e.message ?: "Xatolik")
+                        _state.value = RegisterUiState.Error("${e.message}")
                     }
                 }
             } catch (e: Exception) {
-                _state.value = RegisterUiState.Error(e.message ?: "Xatolik")
+                _state.value = RegisterUiState.Error("${e.message}")
             }
         }
-    }
-
-    fun isValidPhone(phone: String): Boolean {
-        return phone.length == 9 && phone.all { it.isDigit() }
     }
 
     fun reset(){
         _state.value = RegisterUiState.Default
     }
-
 }

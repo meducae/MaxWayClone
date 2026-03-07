@@ -70,7 +70,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         adapter = AdsAdapter()
         storiesAdapter = StoriesItemAdapter()
         categoriesAdapter = CategoriesAdapter()
-        productsAdapter = ProductsAdapter()
+        productsAdapter = ProductsAdapter(
+            { product ->
+                val bundle = Bundle().apply {
+                    putSerializable("product", product)
+                }
+            findNavController().navigate(R.id.productDetailsFragment, bundle)
+        },
+            false
+        )
         binding.notification.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_notificationFragment)
         }
@@ -116,6 +124,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         productsAdapter.setOnDecrementClickListener { id, currentCount ->
             viewModel.removeBasket(id, currentCount)
         }
+//        productsAdapter.
     }
 
     private fun categoriesConfiguration() {
@@ -161,8 +170,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (productsAdapter.getItemViewType(position)) {
-                    ProductsAdapter.TYPE_CATEGORY -> 2 // full width
-                    ProductsAdapter.TYPE_PRODUCT -> 1 // grid
+                    ProductsAdapter.TYPE_CATEGORY -> 2
+                    ProductsAdapter.TYPE_PRODUCT -> 1
                     else -> 1
                 }
             }
@@ -231,11 +240,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onResume() {
         super.onResume()
+        oldStatusBarColor = requireActivity().window.statusBarColor
+        requireActivity().window.statusBarColor = Color.WHITE
+//        Log.d("TTT", "onResume: ")
+//        if (adapter.itemCount > 0) startAutoScroll()
     }
 
     override fun onPause() {
         stopAutoScroll()
         super.onPause()
+
+        requireActivity().window.statusBarColor = oldStatusBarColor
+
     }
 
     override fun onDestroyView() {

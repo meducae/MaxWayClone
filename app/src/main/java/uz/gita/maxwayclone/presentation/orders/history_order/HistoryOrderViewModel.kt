@@ -23,7 +23,7 @@ class HistoryOrderViewModel (private val useCase: OrderUseCase): ViewModel(){
 
                 val historyOrders = allOrders.filter { order ->
                     val diffInMinutes = (currentTime - order.createTime) / 60_000
-                    diffInMinutes >= 15
+                    diffInMinutes >= 3
                 }
                 historyOrdersFlow.emit(historyOrders)
                 loadingFlow.emit(false)

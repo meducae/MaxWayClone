@@ -1,5 +1,6 @@
 package uz.gita.maxwayclone.presentation.profile.register_name
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -13,6 +14,7 @@ import uz.gita.maxwayclone.databinding.FragmentRegisterNameBinding
 
 class FragmentName: Fragment(R.layout.fragment_register_name) {
 
+    private var oldStatusBarColor = 0
     private val tokenManager = TokenManager.getInstance()
     private val binding by viewBinding(FragmentRegisterNameBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,11 +46,20 @@ class FragmentName: Fragment(R.layout.fragment_register_name) {
 
     override fun onResume() {
         super.onResume()
+        oldStatusBarColor = requireActivity().window.statusBarColor
+        requireActivity().window.statusBarColor = Color.WHITE
 
         val bottomNav =
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.isVisible = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        requireActivity().window.statusBarColor = oldStatusBarColor
+
     }
 
 }

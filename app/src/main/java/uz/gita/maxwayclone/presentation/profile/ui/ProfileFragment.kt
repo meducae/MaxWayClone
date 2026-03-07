@@ -69,36 +69,40 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun observeEvents() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect{ state ->
+                viewModel.state.collect { state ->
+                    binding.progressBar.isVisible = state is GetUserUiState.Loading
+
                     when (state) {
-
-                        is GetUserUiState.Default -> {
-                            binding.progressBar.isVisible = false
-                        }
-                        is GetUserUiState.Loading -> {
-                            binding.progressBar.isVisible = true
-                        }
                         is GetUserUiState.Success -> {
-                            val name = state.success.data.name ?: ""
-                            binding.progressBar.isVisible = false
+                            val userData = state.success.data
+                            val name = userData.name ?: ""
+                            val phone = userData.phone ?: ""
 
-                            if (name.isNotEmpty()){
+                            if (name.isNotEmpty()) {
                                 binding.userName.text = name
                                 tokenManager.saveName(name)
-                            }else{
+                            } else {
                                 binding.userName.text = tokenManager.getName()
                             }
-                        }
-                        is GetUserUiState.Error -> {
-                            Toast.makeText(requireContext(), state.error , Toast.LENGTH_SHORT).show()
 
+                            if (phone.isNotEmpty()) {
+                                binding.userPhone.text = phone
+                                tokenManager.savePhone(phone)
+                            }
                         }
+
+                        is GetUserUiState.Error -> {
+                            Toast.makeText(requireContext(), "не подключено", Toast.LENGTH_SHORT).show()
+                        }
+
+                        is GetUserUiState.Default -> {}
+
+                        is GetUserUiState.Loading -> {}
                     }
                 }
             }
         }
-    }
-    private fun setup() {
+    }    private fun setup() {
         binding.userName.text = tokenManager.getName()
         binding.userPhone.text = tokenManager.getPhone()
 

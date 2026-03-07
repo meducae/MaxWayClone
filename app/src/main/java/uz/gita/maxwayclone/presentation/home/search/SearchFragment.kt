@@ -2,6 +2,7 @@ package uz.gita.maxwayclone.presentation.home.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,6 +40,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             } else {
                 adapter.submitList(emptyList())
                 binding.layoutEmptyState.visibility = View.VISIBLE
+                binding.imgPlaceHolder.isVisible = true
             }
         }
 

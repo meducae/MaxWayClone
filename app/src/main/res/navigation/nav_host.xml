@@ -114,6 +114,7 @@
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
+        tools:layout="@layout/fragment_product_details"
         android:name="uz.gita.maxwayclone.presentation.home.search.ProductDetailsFragment"
         android:label="ProductDetailsFragment" >
         <argument

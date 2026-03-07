@@ -100,7 +100,12 @@ class BasketFragment : BottomSheetDialogFragment(R.layout.fragment_basket) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         basketAdapter = BasketAdapter()
-        recommendedAdapter = ProductsAdapter()
+        recommendedAdapter = ProductsAdapter({ product->
+            val bundle = Bundle().apply {
+                putSerializable("product", product)
+            }
+            findNavController().navigate(R.id.productDetailsFragment, bundle)
+        },true)
         setAdapter()
         loadObserveData()
         basketAdapter.setAddListener { productId ->

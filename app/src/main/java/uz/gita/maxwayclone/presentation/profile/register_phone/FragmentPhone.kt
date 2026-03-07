@@ -1,7 +1,9 @@
 package uz.gita.maxwayclone.presentation.profile.register_phone
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -13,6 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.vicmikhailau.maskededittext.MaskedFormatter
+import com.vicmikhailau.maskededittext.MaskedWatcher
 import dev.androidbroadcast.vbpd.viewBinding
 import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.R
@@ -24,6 +28,7 @@ import uz.gita.maxwayclone.databinding.FragmentRegisterPhoneBinding
 
 class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
 
+    private var oldStatusBarColor = 0
     private val binding by viewBinding(FragmentRegisterPhoneBinding::bind)
 
     private val viewModel: PhoneViewModel by viewModels { PhoneViewModelFactory(ApiClient.authApi) }
@@ -44,28 +49,27 @@ class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
             )
         }
 
-        binding.editTextRegisterPhone.doAfterTextChanged { editable ->
-            val number = editable?.toString()?.trim().orEmpty()
-            val valid = viewModel.isValidPhone(number)
+        val formattedNumber = binding.editTextRegisterPhone
+        val formatter = MaskedFormatter("(##) ### ## ##")
 
-            binding.buttonContinue.isEnabled = valid
-
-            val colorRes = if (valid) R.color.white else R.color.gray
-            binding.buttonContinue.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
-        }
+        binding.editTextRegisterPhone.addTextChangedListener(MaskedWatcher(formatter, formattedNumber))
 
 
         binding.buttonContinue.setOnClickListener {
-            val number = binding.editTextRegisterPhone.text.toString().trim()
-            val phone = "+998" + binding.editTextRegisterPhone.text.toString().trim()
+            val fullText = binding.editTextRegisterPhone.text.toString()
 
-            if (!viewModel.isValidPhone(number)) {
-                Toast.makeText(requireContext(), "номер не подходит", Toast.LENGTH_SHORT).show()
+            val unmaskedString = fullText.replace(Regex("\\D"), "")
+
+            val phone = "+998$unmaskedString"
+
+
+            if (unmaskedString.length != 9) {
+                Toast.makeText(requireContext(), "Неправильный номер", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (number.isBlank()) {
-                Toast.makeText(requireContext(), "Phone is empty", Toast.LENGTH_SHORT).show()
+            if (unmaskedString.isBlank()) {
+                Toast.makeText(requireContext(), "Неправильный номер", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -79,7 +83,7 @@ class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 viewModel.state.collect { state ->
-                    when(state){
+                    when (state) {
 
                         is RegisterUiState.Default -> {
                             binding.progressBar.isVisible = false
@@ -88,13 +92,19 @@ class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
                         is RegisterUiState.Loading -> {
                             binding.progressBar.isVisible = true
                         }
+
                         is RegisterUiState.Error -> {
                             binding.progressBar.isVisible = false
                             Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
                         }
+
                         is RegisterUiState.Success -> {
                             findNavController().navigate(R.id.action_fragmentPhone_to_fragmentCode)
-                            Toast.makeText(requireContext(), "Код: ${state.success.data.code}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Код: ${state.success.data.code}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             viewModel.reset()
                         }
 
@@ -112,6 +122,15 @@ class FragmentPhone : Fragment(R.layout.fragment_register_phone) {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNav.isVisible = false
+
+        oldStatusBarColor = requireActivity().window.statusBarColor
+        requireActivity().window.statusBarColor = Color.WHITE
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        requireActivity().window.statusBarColor = oldStatusBarColor
     }
 
 

@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_nav_home_to_fragmentNoInternet"
             app:destination="@id/fragmentNoInternet" />
+        <action
+            android:id="@+id/action_nav_home_to_fragment404Exception"
+            app:destination="@id/fragment404Exception" />
     </fragment>
 
     <dialog
@@ -103,12 +106,12 @@
     <fragment
         android:id="@+id/fragmentNoInternet"
         tools:layout="@layout/fragment_no_connection"
-        android:name="uz.gita.maxwayclone.presentation.no_internet.FragmentNoInternet"
+        android:name="uz.gita.maxwayclone.presentation.exceptions.FragmentNoInternet"
         android:label="FragmentNoInternet" >
         <action
             android:id="@+id/action_fragmentNoInternet_to_nav_home"
             app:destination="@id/nav_home"
-            app:popUpTo="@id/fragmentNoInternet"
+            app:popUpTo="@id/nav_home"
             app:popUpToInclusive="true" />
     </fragment>
         tools:layout="@layout/fragment_profile" />
@@ -127,7 +130,8 @@
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
-        android:name="uz.gita.maxwayclone.presentation.home.search.ProductDetailsFragment"
+        tools:layout="@layout/fragment_product_details"
+        android:name="uz.gita.maxwayclone.presentation.details.product_detail.ProductDetailsFragment"
         android:label="ProductDetailsFragment" >
         <argument
             android:name="product"
@@ -156,6 +160,16 @@
         <argument
             android:name="order_data"
             app:argType="uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment404Exception"
+        android:name="uz.gita.maxwayclone.presentation.exceptions.Fragment404Exception"
+        android:label="Fragment404Exception" >
+        <action
+            android:id="@+id/action_fragment404Exception_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

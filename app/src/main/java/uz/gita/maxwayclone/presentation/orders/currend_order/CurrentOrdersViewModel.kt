@@ -27,9 +27,9 @@ class CurrentOrdersViewModel(private val orderUseCase: OrderUseCase) : ViewModel
         val diffInMinutes = (System.currentTimeMillis() - createTime) / 60_000
 
         return when {
-            diffInMinutes < 5 -> 1
-            diffInMinutes < 10 -> 2
-            diffInMinutes < 15 -> 3
+            diffInMinutes < 1 -> 1
+            diffInMinutes < 2 -> 2
+            diffInMinutes < 3 -> 3
             else -> 4
         }
     }

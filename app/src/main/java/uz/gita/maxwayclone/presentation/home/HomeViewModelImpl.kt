@@ -127,23 +127,24 @@ class HomeViewModelImpl(
                     val productsData = products.data
                     val basketsData = baskets.data
                     val uiModelList: List<ProductTypeModel> = productsData.toTypeModel(basketsData)
-
                     return@combine UiState.Success(uiModelList)
                 } else if (products is UiState.Loading) {
                     return@combine UiState.Loading
                 } else {
-                    return@combine UiState.Error("Server xatoligi")
+                    return@combine UiState.Error("404 server")
                 }
             }.collectLatest { combinedState ->
                 when (combinedState) {
                     is UiState.Success -> {
                         productsFlowData.value = combinedState.data
+                        Log.d("TTT", "fetchProducts: ${combinedState.data.size}")
+                        Log.d("TTT", "fetchProducts: Success")
                     }
-
-                    is UiState.Error -> { /* Xatolik kelsa ekranga chiqarish */
+                    is UiState.Error -> {
+                        Log.d("TTT", "fetchProducts: Error")
+                        errorLiveData.postValue(combinedState.message)
                     }
-
-                    is UiState.Loading -> { /* Loader */
+                    is UiState.Loading -> {
                     }
                 }
             }

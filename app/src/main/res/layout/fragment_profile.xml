@@ -198,7 +198,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:textAllCaps="false"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:src="@drawable/icon_qr_code"

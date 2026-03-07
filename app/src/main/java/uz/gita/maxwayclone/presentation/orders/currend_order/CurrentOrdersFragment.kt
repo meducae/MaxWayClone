@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import uz.gita.maxwayclone.R
 import uz.gita.maxwayclone.databinding.FragmentCurrendOrderBinding
-import uz.gita.maxwayclone.domain.model.orders.MyOrdersUIData
+import uz.gita.maxwayclone.domain.model.orders.UserOrdersUIData
 import uz.gita.maxwayclone.presentation.adapter.CurrentOrdersAdapter
 
 class CurrentOrdersFragment : Fragment(R.layout.fragment_currend_order) {
@@ -66,7 +66,7 @@ class CurrentOrdersFragment : Fragment(R.layout.fragment_currend_order) {
         }
     }
 
-    private fun checkEmptyState(orders: List<MyOrdersUIData>) {
+    private fun checkEmptyState(orders: List<UserOrdersUIData>) {
         if (orders.isEmpty()) {
             binding.emptyState.isVisible = true
             binding.rvCurrentOrders.isVisible = false

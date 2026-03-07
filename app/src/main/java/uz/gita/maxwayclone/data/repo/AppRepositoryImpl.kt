@@ -1,5 +1,6 @@
 package uz.gita.maxwayclone.data.repo
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -104,7 +105,6 @@ class AppRepositoryImpl private constructor(
             if (response.isSuccessful && response.body() != null) {
                 val data = response.body()!!.data
                 val entities = data.map { it.toEntity() }
-
                 notificationDao.updateAllNotifications(entities)
             }
         } catch (e: Exception) {
@@ -113,15 +113,15 @@ class AppRepositoryImpl private constructor(
     }
 
     override suspend fun getMyOrders(): Result<List<UserOrdersUIData>> = withContext(Dispatchers.IO) {
-                try {
-                    val token = TokenManager.getToken()
-                    val response = productApi.getAllOrders(token)
-                    val uiDataList = response.data.map { it.toUIData() }
-                    Result.success(uiDataList)
-                } catch (e: Exception) {
-                    Result.failure(e)
-                }
+        try {
+            val token = TokenManager.getToken()
+            val response = productApi.getAllOrders(token)
+            val uiDataList = response.data.map { it.toUIData() }
+            Result.success(uiDataList)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
     override fun searchProduct(query: String): Flow<UiState<List<SearchModel>>> =
         searchDao.searchProduct(query).map { entities ->
@@ -161,37 +161,39 @@ class AppRepositoryImpl private constructor(
 
     override fun getProducts(): Flow<UiState<List<ProductModel>>> {
         return productsDao.getAllProducts().map { entities ->
-            if (entities.isEmpty()) {
-                UiState.Success(emptyList())
-            } else {
+            if (!entities.isEmpty()) {
                 UiState.Success(entities.map { it.toModel() })
+            }else{
+                UiState.Error("404")
             }
         }
     }
 
-    override suspend fun fetchAndSaveProducts() = withContext(Dispatchers.IO) {
-        try {
-            val response = productApi.getProducts()
-            val entities = mutableListOf<ProductsEntity>()
-            response.data.forEach { category ->
-                val categoryName = category.name
-                category.products.forEach { product ->
-                    entities.add(
-                        ProductsEntity(
-                            id = product.id,
-                            categoryId = product.categoryID,
-                            categoryName = categoryName,
-                            name = product.name,
-                            description = product.description,
-                            imgUrl = product.image,
-                            cost = product.cost
+    override suspend fun fetchAndSaveProducts() {
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productApi.getProducts()
+                val entities = mutableListOf<ProductsEntity>()
+                response.data.forEach { category ->
+                    val categoryName = category.name
+                    category.products.forEach { product ->
+                        entities.add(
+                            ProductsEntity(
+                                id = product.id,
+                                categoryId = product.categoryID,
+                                categoryName = categoryName,
+                                name = product.name,
+                                description = product.description,
+                                imgUrl = product.image,
+                                cost = product.cost
+                            )
                         )
-                    )
+                    }
                 }
+                productsDao.updateAllProducts(entities)
+            } catch (e: Exception) {
+                Log.d("SERVER", "fetchAndSaveProducts: ${e.message}")
             }
-            productsDao.updateAllProducts(entities)
-        } catch (e: Exception) {
-
         }
     }
 
@@ -199,13 +201,15 @@ class AppRepositoryImpl private constructor(
         UiState.Success(entities.map { it.toModel() })
     }
 
-    override suspend fun fetchAndSaveCategories() = withContext(Dispatchers.IO) {
-        try {
-            val response = productApi.getCategories()
-            val entity = response.data.map { it.toEntity() }
-            categoriesDao.updateAllCategories(entity)
-        } catch (e: Exception) {
-
+    override suspend fun fetchAndSaveCategories() {
+        withContext(Dispatchers.IO) {
+            try {
+                val response = productApi.getCategories()
+                val entity = response.data.map { it.toEntity() }
+                categoriesDao.updateAllCategories(entity)
+            } catch (e: Exception) {
+                Log.d("SERVER", "fetchAndSaveCategories: ${e.message}")
+            }
         }
     }
 

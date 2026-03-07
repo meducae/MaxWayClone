@@ -77,11 +77,10 @@ class DeleteConfirmDialog : DialogFragment(R.layout.dialog_exit) {
                         }
 
                         is EditProfileUiState.Error -> {
-                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Не удалось удалить", Toast.LENGTH_SHORT).show()
                             viewModel.reset()
                         }
 
-                        // Bu dialogga kerak emas holatlar:
                         is EditProfileUiState.GetInfoSuccess,
                         is EditProfileUiState.UpdateSuccess -> Unit
                     }

@@ -28,17 +28,14 @@ class InternetMonitor(private val context: Context) {
 
     fun startMonitoring() {
         if (networkCallback != null) return
-
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
-
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 listeners.forEach { it(true) }
                 redirectHandled = false
             }
-
             override fun onLost(network: Network) {
                 listeners.forEach { listener ->
                     if (!redirectHandled) {

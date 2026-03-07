@@ -73,4 +73,7 @@
     <string name="cancel">Отменить</string>
     <string name="nothing_found">Ничего не найдено</string>
     <string name="notification">Уведомление</string>
+    <string name="_00_000_00_00">00 000 00 00</string>
+    <string name="server_exception">Ошибка сервера 404</string>
+    <string name="server_insight">Извините за ошибки, пожалуйста, попробуйте еще раз.</string>
 </resources>

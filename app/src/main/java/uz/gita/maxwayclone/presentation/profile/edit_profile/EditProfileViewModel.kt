@@ -1,0 +1,96 @@
+package uz.gita.maxwayclone.presentation.profile.edit_profile
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import uz.gita.maxwayclone.EditProfileUiState
+import uz.gita.maxwayclone.data.sources.remote.request.register.UpdateRequest
+import uz.gita.maxwayclone.domain.usecase.ClearBasketUseCase
+import uz.gita.maxwayclone.domain.usecase.auth.DeleteAccountUseCase
+import uz.gita.maxwayclone.domain.usecase.auth.GetUserInfoUseCase
+import uz.gita.maxwayclone.domain.usecase.auth.UpdateUserUseCase
+
+class EditProfileViewModel(
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val updateUserUseCase: UpdateUserUseCase,
+    private val clearBasketUseCase: ClearBasketUseCase
+) : ViewModel() {
+
+    private val _state = MutableStateFlow<EditProfileUiState>(EditProfileUiState.Default)
+    val state = _state.asStateFlow()
+
+    fun reset() {
+        _state.value = EditProfileUiState.Default
+    }
+
+    fun deleteAccount(token: String) {
+        if (token.isBlank()) {
+            _state.value = EditProfileUiState.Error("Регистрация не найдена")
+            return
+        }
+        viewModelScope.launch {
+            _state.value = EditProfileUiState.Loading
+            try {
+                deleteAccountUseCase(token).collect { result ->
+                    result.onSuccess { response ->
+                        clearBasketUseCase.invoke()
+                        _state.value = EditProfileUiState.DeleteSuccess(response)
+                    }.onFailure { e ->
+                        _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+            }
+        }
+    }
+
+    fun getUserInfo(token: String) {
+        if (token.isBlank()) {
+            _state.value = EditProfileUiState.Error("Пользователь не найдена")
+            return
+        }
+
+        viewModelScope.launch {
+            _state.value = EditProfileUiState.Loading
+
+            try {
+                getUserInfoUseCase(token).collect { result ->
+                    result.onSuccess { response ->
+                        _state.value = EditProfileUiState.GetInfoSuccess(response)
+                    }.onFailure { e ->
+                        _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = EditProfileUiState.Error(e.message ?: "Xatolik")
+            }
+        }
+    }
+
+    fun updateUser(token: String, request: UpdateRequest) {
+        if (token.isBlank()) {
+            _state.value = EditProfileUiState.Error("токен не найдено")
+            return
+        }
+
+        viewModelScope.launch {
+            _state.value = EditProfileUiState.Loading
+
+            try {
+                updateUserUseCase(token, request).collect { result ->
+                    result.onSuccess { response ->
+                        _state.value = EditProfileUiState.UpdateSuccess(response)
+                    }.onFailure { e ->
+                        _state.value = EditProfileUiState.Error(e.message ?: "Update error")
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = EditProfileUiState.Error(e.message ?: "Update error")
+            }
+        }
+    }
+}

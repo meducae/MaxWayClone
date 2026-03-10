@@ -1,5 +1,6 @@
 package uz.gita.maxwayclone.presentation.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import uz.gita.maxwayclone.presentation.adapter.CategoriesAdapter
 import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 import uz.gita.maxwayclone.presentation.adapter.StoriesItemAdapter
 import kotlin.math.log
+import kotlin.properties.Delegates
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -42,6 +44,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var productsAdapter: ProductsAdapter
     private lateinit var internetMonitor: InternetMonitor
     private lateinit var layoutManager: GridLayoutManager
+    private var oldStatusBarColor by Delegates.notNull<Int>()
     private var autoScrollJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

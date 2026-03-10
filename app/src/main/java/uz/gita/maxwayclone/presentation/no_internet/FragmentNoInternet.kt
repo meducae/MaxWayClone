@@ -17,6 +17,8 @@ class FragmentNoInternet : Fragment(R.layout.fragment_no_connection) {
     private val binding by viewBinding(FragmentNoConnectionBinding::bind)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         internetMonitor = InternetMonitor(requireContext())
 
         binding.buttonAgain.setOnClickListener {

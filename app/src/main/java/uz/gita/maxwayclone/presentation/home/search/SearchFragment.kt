@@ -27,6 +27,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         setupUI()
         observeViewModel()
+        showKeyboard()
 
     }
 
@@ -76,6 +77,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
 
         }
+    }
+    private fun showKeyboard() {
+        binding.etSearch.requestFocus()
+
+        binding.etSearch.postDelayed({
+            val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+            imm.showSoftInput(binding.etSearch, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+        }, 200)
     }
 
     override fun onDestroyView() {

@@ -12,7 +12,7 @@ import uz.gita.maxwayclone.data.sources.remote.api.ProductApi
 
 object ApiClient {
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor (ChuckerInterceptor.Builder(instance).build())
+        .addInterceptor(ChuckerInterceptor.Builder(instance).build())
         .build()
 
     private val retrofit = Retrofit.Builder()
@@ -24,5 +24,4 @@ object ApiClient {
     fun getProductApi(): ProductApi = retrofit.create(ProductApi::class.java)
     val authApi: AuthApi = retrofit.create(AuthApi::class.java)
     fun getBranchApi(): BranchApi = retrofit.create(BranchApi::class.java)
-
 }

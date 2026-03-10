@@ -17,7 +17,7 @@ import uz.gita.maxwayclone.domain.model.home.ProductTypeModel
 import kotlin.math.abs
 
 class ProductsAdapter(
-    private val onClick:(ProductModel) -> Unit,
+    private val onClick:(ProductModel , Int) -> Unit,
     private val isHorizontal: Boolean
 ) : ListAdapter<ProductTypeModel, RecyclerView.ViewHolder>(ProductDiffUtil) {
 
@@ -71,7 +71,7 @@ class ProductsAdapter(
 
             binding.root.setOnClickListener {
                 val item = getItem(absoluteAdapterPosition) as ProductTypeModel.ProductItem
-                onClick(item.product)
+                onClick(item.product , item.count)
             }
         }
 
@@ -114,7 +114,7 @@ class ProductsAdapter(
 
             binding.root.setOnClickListener {
                 val item = getItem(absoluteAdapterPosition) as ProductTypeModel.ProductItem
-                onClick(item.product)
+                onClick(item.product , item.count)
             }
         }
 

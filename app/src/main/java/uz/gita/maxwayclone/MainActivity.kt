@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_profile, R.id.nav_orders, R.id.nav_basket -> {
                     bottomNav.visibility = android.view.View.VISIBLE
                 }
-
                 else -> {
                     bottomNav.visibility = android.view.View.GONE
                 }

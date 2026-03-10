@@ -1,11 +1,7 @@
-package uz.gita.maxwayclone.presentation.home.search
+package uz.gita.maxwayclone.presentation.details.product_detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import uz.gita.maxwayclone.R
@@ -24,13 +20,13 @@ class ProductDetailsFragment : Fragment(R.layout.fragment_product_details) {
 
         val product = arguments?.getSerializable("product") as? SearchModel
         val product1 = arguments?.getSerializable("product") as? ProductModel
+        val count = arguments?.getInt("count")
 
         product?.let { item ->
             binding.apply {
                 Glide.with(requireContext())
                     .load(item.image)
                     .into(imgDetail)
-
                 tvDetailTitle.text = item.name
                 tvDetailDesc.text = item.description
                 cost.text = "${item.cost} сум"
@@ -44,11 +40,10 @@ class ProductDetailsFragment : Fragment(R.layout.fragment_product_details) {
                 Glide.with(requireContext())
                     .load(item.image)
                     .into(imgDetail)
-
                 tvDetailTitle.text = item.name
                 tvDetailDesc.text = item.description
                 cost.text = "${item.cost} сум"
-
+                binding.tvCount.text = count.toString()
                 name.text = item.name
             }
         }

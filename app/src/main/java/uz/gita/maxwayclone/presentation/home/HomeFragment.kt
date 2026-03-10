@@ -1,5 +1,6 @@
 package uz.gita.maxwayclone.presentation.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,7 +28,6 @@ import uz.gita.maxwayclone.presentation.adapter.AdsAdapter
 import uz.gita.maxwayclone.presentation.adapter.CategoriesAdapter
 import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 import uz.gita.maxwayclone.presentation.adapter.StoriesItemAdapter
-import kotlin.math.log
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -42,6 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var productsAdapter: ProductsAdapter
     private lateinit var internetMonitor: InternetMonitor
     private lateinit var layoutManager: GridLayoutManager
+    private var oldStatusBarColor = 0
     private var autoScrollJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +56,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         internetMonitor = InternetMonitor(requireContext())
         internetMonitor.registerListener { isConnected ->
             if (!isConnected) {
-                lifecycleScope.launch (Dispatchers.Main){
+                lifecycleScope.launch(Dispatchers.Main) {
                     findNavController().navigate(R.id.action_nav_home_to_fragmentNoInternet)
                 }
             }
@@ -71,12 +72,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         storiesAdapter = StoriesItemAdapter()
         categoriesAdapter = CategoriesAdapter()
         productsAdapter = ProductsAdapter(
-            { product ->
+            { product, count ->
                 val bundle = Bundle().apply {
                     putSerializable("product", product)
+                    putInt("count", count)
                 }
-            findNavController().navigate(R.id.productDetailsFragment, bundle)
-        },
+                findNavController().navigate(R.id.productDetailsFragment, bundle)
+            },
             false
         )
         binding.notification.setOnClickListener {
@@ -103,14 +105,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 if (firstVisible >= 0 && firstVisible < productsAdapter.currentList.size) {
                     val product = productsAdapter.currentList[firstVisible]
-                    when (product) {
-                        is ProductTypeModel.ProductItem -> {
-                            categoriesAdapter.highlight(product.product.categoryID)
-                        }
-
-                        is ProductTypeModel.CategoryHeader -> {
-                            categoriesAdapter.highlight(product.categoryId)
-                        }
+                    val categoryId = when (product) {
+                        is ProductTypeModel.ProductItem -> product.product.categoryID
+                        is ProductTypeModel.CategoryHeader -> product.categoryId
+                    }
+                    categoriesAdapter.highlight(categoryId)
+                    val categoryIndex = categoriesAdapter.currentList.indexOfFirst { it.id == categoryId }
+                    if (categoryIndex != -1) {
+                        binding.categories.smoothScrollToPosition(categoryIndex)
                     }
                 }
             }
@@ -124,7 +126,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         productsAdapter.setOnDecrementClickListener { id, currentCount ->
             viewModel.removeBasket(id, currentCount)
         }
-//        productsAdapter.
     }
 
     private fun categoriesConfiguration() {
@@ -192,7 +193,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             adapter.submitList(list) {
                 val middle = 10000 / 2
                 val startPosition = middle - (middle % list.size)
-
                 if (binding.viewPagerCarousel.currentItem == 0) {
                     binding.viewPagerCarousel.setCurrentItem(startPosition, false)
                 }
@@ -206,13 +206,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.productsFlowData.collectLatest { productsData ->
-                productsAdapter.submitList(productsData)
-                delay(500)
-                binding.shimmerLoading.stopShimmer()
-                binding.shimmerLoading.visibility = View.GONE
-                binding.menuHome.visibility = View.VISIBLE
+            viewModel.productsFlowData.collect { productsData ->
+                Log.d("TTT", "observeViewModel: ${productsData.size}")
+                if (productsData.isNotEmpty()) {
+                    Log.d("TTT", "observeViewModelnotEmpty: ${productsData.size}")
+                    productsAdapter.submitList(productsData)
+                    delay(500)
+                    binding.shimmerLoading.stopShimmer()
+                    binding.shimmerLoading.visibility = View.GONE
+                    binding.menuHome.visibility = View.VISIBLE
+                }
             }
+        }
+
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            findNavController().navigate(R.id.fragment404Exception)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -242,16 +250,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onResume()
         oldStatusBarColor = requireActivity().window.statusBarColor
         requireActivity().window.statusBarColor = Color.WHITE
-//        Log.d("TTT", "onResume: ")
-//        if (adapter.itemCount > 0) startAutoScroll()
     }
 
     override fun onPause() {
         stopAutoScroll()
         super.onPause()
-
         requireActivity().window.statusBarColor = oldStatusBarColor
-
     }
 
     override fun onDestroyView() {

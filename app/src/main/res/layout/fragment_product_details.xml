@@ -123,7 +123,7 @@
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="1"
+                tools:text="0"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"

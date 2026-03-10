@@ -13,5 +13,4 @@ class GetProductsUseCaseImpl(private val repository: AppRepository) : GetProduct
     override suspend fun fetchAndSaveProducts() {
         repository.fetchAndSaveProducts()
     }
-
 }

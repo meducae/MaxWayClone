@@ -28,6 +28,8 @@ import uz.gita.maxwayclone.presentation.adapter.AdsAdapter
 import uz.gita.maxwayclone.presentation.adapter.CategoriesAdapter
 import uz.gita.maxwayclone.presentation.adapter.ProductsAdapter
 import uz.gita.maxwayclone.presentation.adapter.StoriesItemAdapter
+import kotlin.math.log
+import kotlin.properties.Delegates
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -56,7 +58,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         internetMonitor = InternetMonitor(requireContext())
         internetMonitor.registerListener { isConnected ->
             if (!isConnected) {
-                lifecycleScope.launch(Dispatchers.Main) {
+                lifecycleScope.launch (Dispatchers.Main){
                     findNavController().navigate(R.id.action_nav_home_to_fragmentNoInternet)
                 }
             }

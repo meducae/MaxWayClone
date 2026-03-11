@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="16dp"
+    android:elevation="0dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16sp">
+
+        <TextView
+            android:id="@+id/numberOrder"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:background="@color/shimmer_color"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/priceOrder"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:background="@color/shimmer_color"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-black"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintEnd_toStartOf="@id/textPrice"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textPrice"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:background="@color/shimmer_color"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/dateOrder"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:background="@color/shimmer_color"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_grey"
+            android:layout_marginTop="8dp"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/numberOrder"/>
+
+
+        <TextView
+            android:id="@+id/timeOrder"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:background="@color/shimmer_color"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/dateOrder"
+            app:layout_constraintTop_toBottomOf="@id/numberOrder"/>
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            app:layout_constraintEnd_toEndOf="@id/textPrice"
+            app:layout_constraintTop_toBottomOf="@id/priceOrder"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="3dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/shimmer_color"
+            android:textColor="#5BFF62"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -24,4 +24,6 @@ interface AdsDao : BaseDao<AdsEntity> {
 
 
 
+
+
 }

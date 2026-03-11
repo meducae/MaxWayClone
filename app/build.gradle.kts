@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -16,14 +17,16 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -33,14 +36,14 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
-    buildFeatures{
+    buildFeatures {
         buildConfig = true
     }
-    defaultConfig{
-        buildConfigField("String" , "BASE_URL" , "\"https://idalia-witting-unfractiously.ngrok-free.dev/\"")
+    defaultConfig {
+        buildConfigField("String", "BASE_URL", "\"https://newsworthy-cosmological-song.ngrok-free.dev/\"")
     }
 
 }
@@ -77,4 +80,13 @@ dependencies {
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:4.0.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.google.android.material:material:1.13.0-alpha01")
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation("io.github.vicmikhailau:MaskedEditText:5.0.3")
+
+    implementation("io.github.chaosleung:pinview:1.4.4")
+
+
 }

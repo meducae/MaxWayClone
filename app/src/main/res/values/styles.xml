@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="OtpBoxStyle">
+        <item name="android:layout_width">52dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+    </style>
+
+    <style name="AppBottomSheetTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppBottomSheetStyle</item>
+    </style>
+
+    <style name="AppBottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/BottomSheetRoundedShape</item>
+    </style>
+
+    <style name="BottomSheetRoundedShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppBottomSheetStyleBasket</item>
+    </style>
+
+    <style name="AppBottomSheetStyleBasket" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="button">
+
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="background">@drawable/background_button_register</item>
+
+    </style>
+
+    <style name="PinViewBackground" parent="@style/PinWidget.PinView">
+        <item name="itemCount">4</item>
+        <item name="itemHeight">60dp</item>
+        <item name="itemWidth">60dp</item>
+        <item name="itemSpacing">20dp</item>
+        <item name="itemRadius">10dp</item>
+        <item name="lineWidth">2dp</item>
+        <item name="viewType">rectangle</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:inputType">number</item>
+        <item name="cursorColor">@color/black</item>
+        <item name="background">@drawable/bg_otp_box</item>
+    </style>
+
+</resources>

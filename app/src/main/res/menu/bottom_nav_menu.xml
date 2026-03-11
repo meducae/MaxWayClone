@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/home"
         android:title="@string/home" />
     <item
         android:id="@+id/nav_basket"
-        android:icon="@drawable/basket"
+        android:icon="@drawable/icon_basket"
         android:title="@string/cart" />
     <item
         android:id="@+id/nav_orders"
@@ -15,6 +16,7 @@
 
     <item
         android:id="@+id/nav_profile"
-        android:icon="@drawable/profile"
+        android:icon="@drawable/icon_profile"
         android:title="@string/profile" />
+
 </menu>
